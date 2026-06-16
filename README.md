@@ -1,6 +1,6 @@
 # Rick and Morty Multi-Dimensional Explorer
 
-A premium, modern web application built with **Next.js 15**, **TypeScript**, and **Tailwind CSS**. This project is a complete rewrite and enhancement of the original PHP-based Rick and Morty explorer.
+A premium, modern web application built with **Next.js 16**, **TypeScript**, and **Tailwind CSS**. This project is a complete rewrite and enhancement of the original PHP-based Rick and Morty explorer.
 
 ## 🚀 Features
 
@@ -15,9 +15,9 @@ A premium, modern web application built with **Next.js 15**, **TypeScript**, and
     - **Smooth Animations**: Powered by Framer Motion for a fluid, reactive feel.
     - **Responsive Layout**: Fully optimized for mobile, tablet, and desktop screens.
 - **Performance Optimized**:
-    - **Server-Side Rendering (SSR)**: Fast initial loads and great SEO.
-    - **Optimized Images**: Using `next/image` for automatic resizing and lazy loading.
-    - **Smart Caching**: API responses are cached to minimize network requests.
+    - **Static Export**: Every listing, detail page, sitemap, and robots output is generated into `out/` for CDN/static hosting.
+    - **Export-Safe Images**: Uses `next/image` with unoptimized remote images for static hosting compatibility.
+    - **Build-Time API Snapshot**: Rick and Morty API collection pages are fetched once per build and reused across all generated pages.
 - **Error Handling**: Graceful "Dimensional Glitch" error states and search fallback UIs.
 
 ## 🛠️ Tech Stack
@@ -56,12 +56,14 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Building for Production
+### Building Static Production Output
 
 ```bash
 npm run build
 npm run start
 ```
+
+`npm run build` runs `npm run generate:data` first, then `next build` writes the static export to `out/`. `npm run start` serves the generated `out/` directory locally.
 
 ## 📂 Project Structure
 

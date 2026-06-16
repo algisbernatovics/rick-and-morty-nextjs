@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
-import { rickAndMortyApi } from "@/lib/api";
-import { getEpisodeIdFromUrl } from "@/lib/utils";
+import { getIdFromUrl } from "@/lib/utils";
 import { CharacterCard } from "@/components/CharacterCard";
 import { ChevronLeft, Globe, MapPin, Users } from "lucide-react";
 import Link from "next/link";
 import { buildLocationJsonLd, buildLocationSummary, createMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
+import { getCharactersByIds, getLocationById, getLocationIds } from "@/lib/static-data";
 
 interface LocationPageProps {
     params: Promise<{ id: string }>;
+}
+
+export const dynamic = "force-static";
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+    return getLocationIds().map((id) => ({ id: String(id) }));
 }
 
 export async function generateMetadata({ params }: LocationPageProps): Promise<Metadata> {
@@ -23,21 +30,21 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
         });
     }
 
-    try {
-        const location = await rickAndMortyApi.getSingleLocation(locationId);
+    const location = getLocationById(locationId);
 
-        return createMetadata({
-            title: `${location.name} Location Guide`,
-            description: buildLocationSummary(location),
-            path: `/location/${location.id}`,
-        });
-    } catch {
+    if (!location) {
         return createMetadata({
             title: "Location Not Found",
             description: "The requested Rick and Morty location page could not be found.",
             path: `/location/${id}`,
         });
     }
+
+    return createMetadata({
+        title: `${location.name} Location Guide`,
+        description: buildLocationSummary(location),
+        path: `/location/${location.id}`,
+    });
 }
 
 export default async function LocationPage({ params }: LocationPageProps) {
@@ -48,14 +55,14 @@ export default async function LocationPage({ params }: LocationPageProps) {
         notFound();
     }
 
-    const location = await rickAndMortyApi.getSingleLocation(locationId).catch(() => null);
+    const location = getLocationById(locationId);
 
     if (!location) {
         notFound();
     }
 
-    const characterIds = location.residents.map(url => getEpisodeIdFromUrl(url));
-    const characters = await rickAndMortyApi.getMultipleCharacters(characterIds);
+    const characterIds = location.residents.map((url) => getIdFromUrl(url));
+    const characters = getCharactersByIds(characterIds);
     const summary = buildLocationSummary(location);
     const jsonLd = buildLocationJsonLd(location);
 

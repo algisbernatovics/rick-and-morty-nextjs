@@ -11,7 +11,7 @@ const navItems = [
     {
         name: "Characters",
         href: "/",
-        activePrefixes: ["/", "/character"]
+        activePrefixes: ["/", "/character", "/characters"]
     },
     {
         name: "Episodes",

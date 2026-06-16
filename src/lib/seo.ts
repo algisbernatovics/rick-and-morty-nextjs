@@ -18,6 +18,18 @@ function getBaseUrl() {
   }
 }
 
+function shouldKeepPath(pathname: string) {
+  return pathname === "/" || /\/[^/]+\.[^/]+$/.test(pathname);
+}
+
+function withStaticTrailingSlash(url: URL) {
+  if (!shouldKeepPath(url.pathname) && !url.pathname.endsWith("/")) {
+    url.pathname = `${url.pathname}/`;
+  }
+
+  return url;
+}
+
 export function getSiteName() {
   return SITE_NAME;
 }
@@ -31,7 +43,7 @@ export function getMetadataBase() {
 }
 
 export function getAbsoluteUrl(path = "/") {
-  return new URL(path, getBaseUrl()).toString();
+  return withStaticTrailingSlash(new URL(path, getBaseUrl())).toString();
 }
 
 export function buildCanonical(path = "/") {

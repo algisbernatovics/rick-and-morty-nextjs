@@ -13,7 +13,9 @@ export function formatDate(dateString: string) {
     });
 }
 
-export function getEpisodeIdFromUrl(url: string): number {
+export function getIdFromUrl(url: string): number {
     const parts = url.split("/");
     return parseInt(parts[parts.length - 1]);
 }
+
+export const getEpisodeIdFromUrl = getIdFromUrl;

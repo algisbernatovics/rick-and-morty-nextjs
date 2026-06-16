@@ -7,14 +7,13 @@ import { cn } from "@/lib/utils";
 interface PaginationProps {
     currentPage: number;
     totalPages: number;
-    baseUrl: string;
+    firstPageUrl: string;
+    pageUrlPrefix: string;
 }
 
-export function Pagination({ currentPage, totalPages, baseUrl }: PaginationProps) {
+export function Pagination({ currentPage, totalPages, firstPageUrl, pageUrlPrefix }: PaginationProps) {
     const getPageUrl = (page: number) => {
-        const url = new URL(baseUrl, "http://localhost");
-        url.searchParams.set("page", page.toString());
-        return url.pathname + url.search;
+        return page === 1 ? firstPageUrl : `${pageUrlPrefix}/${page}`;
     };
 
     const pages = [];
