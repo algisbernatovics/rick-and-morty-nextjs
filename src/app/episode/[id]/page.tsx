@@ -6,6 +6,8 @@ import Link from "next/link";
 import { buildEpisodeJsonLd, buildEpisodeSummary, createMetadata, formatEpisodeCode } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getCharactersByIds, getEpisodeById, getEpisodeIds } from "@/lib/static-data";
+import { JsonLd } from "@/components/ui/JsonLd";
+import { Panel } from "@/components/ui/Panel";
 
 interface EpisodePageProps {
     params: Promise<{ id: string }>;
@@ -68,15 +70,12 @@ export default async function EpisodePage({ params }: EpisodePageProps) {
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-12">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            <JsonLd data={jsonLd} />
             <Link
                 href="/episodes"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 font-bold group"
+                className="focus-ring mb-8 inline-flex items-center gap-2 rounded-lg font-bold text-muted-foreground transition-colors hover:text-primary"
             >
-                <ChevronLeft className="group-hover:-translate-x-1 transition-transform" size={20} />
+                <ChevronLeft size={20} aria-hidden="true" />
                 BACK TO ALL EPISODES
             </Link>
 
@@ -84,7 +83,7 @@ export default async function EpisodePage({ params }: EpisodePageProps) {
                 <p className="text-primary font-black tracking-[0.3em] uppercase mb-4 animate-fade-in group">
                     {formatEpisodeCode(episode.episode)}
                 </p>
-                <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white mb-8 uppercase leading-none">
+                <h1 className="mb-8 text-5xl font-black uppercase leading-none tracking-tighter text-text-strong md:text-8xl">
                     {episode.name}
                 </h1>
                 <p className="max-w-3xl mx-auto text-lg text-muted-foreground leading-relaxed mb-8">
@@ -92,27 +91,27 @@ export default async function EpisodePage({ params }: EpisodePageProps) {
                 </p>
 
                 <div className="flex flex-wrap justify-center gap-6">
-                    <div className="glass px-8 py-4 rounded-2xl flex items-center gap-3">
-                        <Calendar className="text-secondary" size={24} />
+                    <Panel className="flex items-center gap-3 rounded-2xl px-8 py-4">
+                        <Calendar className="text-secondary" size={24} aria-hidden="true" />
                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Original Air Date</p>
-                            <p className="font-bold text-white">{episode.air_date}</p>
+                            <p className="eyebrow">Original Air Date</p>
+                            <p className="font-bold text-text-strong">{episode.air_date}</p>
                         </div>
-                    </div>
-                    <div className="glass px-8 py-4 rounded-2xl flex items-center gap-3">
-                        <Users className="text-accent" size={24} />
+                    </Panel>
+                    <Panel className="flex items-center gap-3 rounded-2xl px-8 py-4">
+                        <Users className="text-accent" size={24} aria-hidden="true" />
                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Characters Featured</p>
-                            <p className="font-bold text-white">{characters.length} dimensional beings</p>
+                            <p className="eyebrow">Characters Featured</p>
+                            <p className="font-bold text-text-strong">{characters.length} dimensional beings</p>
                         </div>
-                    </div>
+                    </Panel>
                 </div>
             </header>
 
             <section>
                 <div className="flex items-center justify-center gap-3 mb-8">
-                    <Tv className="text-primary" size={32} />
-                    <h2 className="text-3xl font-black tracking-tight text-white uppercase text-center">
+                    <Tv className="text-primary" size={32} aria-hidden="true" />
+                    <h2 className="text-center text-3xl font-black uppercase tracking-tight text-text-strong">
                         Characters in Rick and Morty Episode {episode.name}
                     </h2>
                 </div>

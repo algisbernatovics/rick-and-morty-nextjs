@@ -6,6 +6,8 @@ import Link from "next/link";
 import { buildLocationJsonLd, buildLocationSummary, createMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getCharactersByIds, getLocationById, getLocationIds } from "@/lib/static-data";
+import { JsonLd } from "@/components/ui/JsonLd";
+import { Panel } from "@/components/ui/Panel";
 
 interface LocationPageProps {
     params: Promise<{ id: string }>;
@@ -68,15 +70,12 @@ export default async function LocationPage({ params }: LocationPageProps) {
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-12">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            <JsonLd data={jsonLd} />
             <Link
                 href="/locations"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 font-bold group"
+                className="focus-ring mb-8 inline-flex items-center gap-2 rounded-lg font-bold text-muted-foreground transition-colors hover:text-primary"
             >
-                <ChevronLeft className="group-hover:-translate-x-1 transition-transform" size={20} />
+                <ChevronLeft size={20} aria-hidden="true" />
                 BACK TO ALL LOCATIONS
             </Link>
 
@@ -84,7 +83,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
                 <p className="text-secondary font-black tracking-[0.3em] uppercase mb-4 animate-fade-in group">
                     {location.type} • {location.dimension}
                 </p>
-                <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white mb-8 uppercase leading-none bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                <h1 className="mb-8 bg-gradient-to-r from-secondary to-primary bg-clip-text text-5xl font-black uppercase leading-none tracking-tighter text-transparent md:text-8xl">
                     {location.name}
                 </h1>
                 <p className="max-w-3xl mx-auto text-lg text-muted-foreground leading-relaxed mb-8">
@@ -92,27 +91,27 @@ export default async function LocationPage({ params }: LocationPageProps) {
                 </p>
 
                 <div className="flex flex-wrap justify-center gap-6">
-                    <div className="glass px-8 py-4 rounded-2xl flex items-center gap-3">
-                        <Globe className="text-secondary" size={24} />
+                    <Panel className="flex items-center gap-3 rounded-2xl px-8 py-4">
+                        <Globe className="text-secondary" size={24} aria-hidden="true" />
                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Dimension</p>
-                            <p className="font-bold text-white uppercase">{location.dimension}</p>
+                            <p className="eyebrow">Dimension</p>
+                            <p className="font-bold uppercase text-text-strong">{location.dimension}</p>
                         </div>
-                    </div>
-                    <div className="glass px-8 py-4 rounded-2xl flex items-center gap-3">
-                        <Users className="text-primary" size={24} />
+                    </Panel>
+                    <Panel className="flex items-center gap-3 rounded-2xl px-8 py-4">
+                        <Users className="text-primary" size={24} aria-hidden="true" />
                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Known Residents</p>
-                            <p className="font-bold text-white">{characters.length} beings</p>
+                            <p className="eyebrow">Known Residents</p>
+                            <p className="font-bold text-text-strong">{characters.length} beings</p>
                         </div>
-                    </div>
+                    </Panel>
                 </div>
             </header>
 
             <section>
                 <div className="flex items-center justify-center gap-3 mb-8">
-                    <MapPin className="text-secondary" size={32} />
-                    <h2 className="text-3xl font-black tracking-tight text-white uppercase text-center">
+                    <MapPin className="text-secondary" size={32} aria-hidden="true" />
+                    <h2 className="text-center text-3xl font-black uppercase tracking-tight text-text-strong">
                         Residents of Rick and Morty Location {location.name}
                     </h2>
                 </div>
@@ -124,11 +123,11 @@ export default async function LocationPage({ params }: LocationPageProps) {
                         ))}
                     </div>
                 ) : (
-                    <div className="glass p-12 rounded-3xl text-center border-2 border-dashed border-white/10">
+                    <Panel className="rounded-3xl border-2 border-dashed border-border-subtle p-12 text-center">
                         <p className="text-2xl font-black text-muted-foreground uppercase tracking-tighter">
                             No known residents in this location... yet.
                         </p>
-                    </div>
+                    </Panel>
                 )}
             </section>
         </div>

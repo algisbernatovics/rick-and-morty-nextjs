@@ -1,8 +1,5 @@
-"use client";
-
 import Link from "next/link";
 import { Episode } from "@/types";
-import { motion } from "framer-motion";
 
 interface EpisodeRowProps {
     episode: Episode;
@@ -10,27 +7,23 @@ interface EpisodeRowProps {
 
 export function EpisodeRow({ episode }: EpisodeRowProps) {
     return (
-        <motion.div
-            whileHover={{ x: 5 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        <Link
+            href={`/episode/${episode.id}`}
+            aria-label={`View ${episode.name} episode guide`}
+            className="panel panel-interactive focus-ring group flex items-center justify-between rounded-xl p-4"
         >
-            <Link
-                href={`/episode/${episode.id}`}
-                className="flex items-center justify-between p-4 rounded-xl glass hover:bg-white/5 transition-colors border border-white/5 group"
-            >
-                <div>
-                    <p className="text-xs font-black text-primary uppercase tracking-tighter mb-0.5">
-                        {episode.episode}
-                    </p>
-                    <h3 className="text-lg font-bold text-white group-hover:text-secondary transition-colors">
-                        {episode.name}
-                    </h3>
-                </div>
-                <div className="text-right hidden sm:block">
-                    <p className="text-[10px] uppercase font-black text-muted-foreground tracking-widest">Air Date</p>
-                    <p className="text-sm font-medium text-gray-300">{episode.air_date}</p>
-                </div>
-            </Link>
-        </motion.div>
+            <div>
+                <p className="mb-0.5 text-xs font-black uppercase tracking-tighter text-primary">
+                    {episode.episode}
+                </p>
+                <h3 className="text-lg font-bold text-text-strong transition-colors group-hover:text-secondary">
+                    {episode.name}
+                </h3>
+            </div>
+            <div className="hidden text-right sm:block">
+                <p className="eyebrow">Air Date</p>
+                <p className="text-sm font-medium text-text-soft">{episode.air_date}</p>
+            </div>
+        </Link>
     );
 }

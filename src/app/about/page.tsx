@@ -14,7 +14,7 @@ export default function AboutPage() {
     return (
         <div className="max-w-4xl mx-auto px-4 py-16">
             <header className="mb-16 text-center">
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white mb-6 uppercase">
+                <h1 className="mb-6 text-5xl font-black uppercase tracking-tighter text-text-strong md:text-7xl">
                     About the <span className="text-primary">Guide</span>
                 </h1>
                 <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-medium">
@@ -23,23 +23,23 @@ export default function AboutPage() {
             </header>
 
             <div className="grid grid-cols-1 gap-8">
-                <section className="glass p-8 md:p-12 rounded-3xl border-l-4 border-primary">
+                <section className="panel rounded-3xl border-l-4 border-l-primary p-8 md:p-12">
                     <div className="flex items-center gap-4 mb-6">
                         <Code2 className="text-primary" size={32} />
-                        <h2 className="text-3xl font-black tracking-tight text-white uppercase">Project Background</h2>
+                        <h2 className="text-3xl font-black uppercase tracking-tight text-text-strong">Project Background</h2>
                     </div>
                     <p className="text-lg text-muted-foreground mb-4 leading-relaxed">
-                        Built by <span className="text-white font-bold">Algis Bernatovics</span>, this project is a rewrite of my earlier Rick and Morty coursework app from Codelex, where I started as a PHP developer.
+                        Built by <span className="font-bold text-text-strong">Algis Bernatovics</span>, this project is a rewrite of my earlier Rick and Morty coursework app from Codelex, where I started as a PHP developer.
                     </p>
                     <p className="text-lg text-muted-foreground leading-relaxed">
                         The original PHP version began on May 7, 2023 and is publicly available on GitHub. This Next.js version rebuilds the same idea with a stronger frontend architecture, cleaner routing, better SEO, and a more polished user experience.
                     </p>
                 </section>
 
-                <section className="glass p-8 md:p-12 rounded-3xl border-l-4 border-primary">
+                <section className="panel rounded-3xl border-l-4 border-l-primary p-8 md:p-12">
                     <div className="flex items-center gap-4 mb-6">
                         <RefreshCw className="text-primary" size={32} />
-                        <h2 className="text-3xl font-black tracking-tight text-white uppercase">What Changed in the Rewrite</h2>
+                        <h2 className="text-3xl font-black uppercase tracking-tight text-text-strong">What Changed in the Rewrite</h2>
                     </div>
                     <p className="text-lg text-muted-foreground mb-4 leading-relaxed">
                         This rewrite moves the project from a PHP coursework foundation to a modern Next.js and TypeScript application with App Router, reusable components, responsive layouts, and a cleaner deployment workflow.
@@ -49,26 +49,26 @@ export default function AboutPage() {
                     </p>
                 </section>
 
-                <section className="glass p-8 md:p-12 rounded-3xl border-l-4 border-secondary">
+                <section className="panel rounded-3xl border-l-4 border-l-secondary p-8 md:p-12">
                     <div className="flex items-center gap-4 mb-6">
                         <Heart className="text-secondary" size={32} />
-                        <h2 className="text-3xl font-black tracking-tight text-white uppercase">Special Thanks</h2>
+                        <h2 className="text-3xl font-black uppercase tracking-tight text-text-strong">Special Thanks</h2>
                     </div>
                     <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                        A huge thanks to the <span className="text-white font-bold">Axel Fuhrmann</span> and the team behind the <Link href="https://rickandmortyapi.com/" target="_blank" className="text-primary hover:underline font-bold">Rick and Morty API</Link>.
+                        A huge thanks to <span className="font-bold text-text-strong">Axel Fuhrmann</span> and the team behind the <Link href="https://rickandmortyapi.com/" target="_blank" rel="noopener noreferrer" className="focus-ring rounded font-bold text-primary hover:underline">Rick and Morty API</Link>.
                         Your amazing work makes this kind of exploration possible across all dimensions.
                     </p>
                 </section>
 
-                <section className="glass p-8 md:p-12 rounded-3xl border-l-4 border-accent">
+                <section className="panel rounded-3xl border-l-4 border-l-accent p-8 md:p-12">
                     <div className="flex items-center gap-4 mb-6">
                         <ExternalLink className="text-accent" size={32} />
-                        <h2 className="text-3xl font-black tracking-tight text-white uppercase">Contacts</h2>
+                        <h2 className="text-3xl font-black uppercase tracking-tight text-text-strong">Contacts</h2>
                     </div>
                     <div className="space-y-4 mb-8">
                         <Link
                             href="mailto:algis.bernatovics@gmail.com"
-                            className="flex items-center gap-3 text-lg text-muted-foreground hover:text-white transition-colors"
+                            className="focus-ring flex items-center gap-3 rounded text-lg text-muted-foreground transition-colors hover:text-text-strong"
                         >
                             <Mail className="text-primary shrink-0" size={22} />
                             algis.bernatovics@gmail.com
@@ -76,7 +76,8 @@ export default function AboutPage() {
                         <Link
                             href="https://www.linkedin.com/in/algisbernatovics/"
                             target="_blank"
-                            className="flex items-center gap-3 text-lg text-muted-foreground hover:text-white transition-colors"
+                            rel="noopener noreferrer"
+                            className="focus-ring flex items-center gap-3 rounded text-lg text-muted-foreground transition-colors hover:text-text-strong"
                         >
                             <Linkedin className="text-secondary shrink-0" size={22} />
                             linkedin.com/in/algisbernatovics
@@ -84,7 +85,8 @@ export default function AboutPage() {
                         <Link
                             href="https://github.com/algisbernatovics/rick-and-morty-njs"
                             target="_blank"
-                            className="flex items-center gap-3 text-lg text-muted-foreground hover:text-white transition-colors"
+                            rel="noopener noreferrer"
+                            className="focus-ring flex items-center gap-3 rounded text-lg text-muted-foreground transition-colors hover:text-text-strong"
                         >
                             <Github className="text-accent shrink-0" size={22} />
                             Next.js repository
@@ -92,14 +94,15 @@ export default function AboutPage() {
                         <Link
                             href="https://github.com/algisbernatovics/rick-and-morty"
                             target="_blank"
-                            className="flex items-center gap-3 text-lg text-muted-foreground hover:text-white transition-colors"
+                            rel="noopener noreferrer"
+                            className="focus-ring flex items-center gap-3 rounded text-lg text-muted-foreground transition-colors hover:text-text-strong"
                         >
                             <Github className="text-accent shrink-0" size={22} />
                             PHP repository
                         </Link>
                     </div>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                        This application is deployed on <span className="text-white font-bold">Vercel</span>. It is an unofficial fan project and is not affiliated with Adult Swim or the official Rick and Morty brand.
+                        This application is deployed on <span className="font-bold text-text-strong">Vercel</span>. It is an unofficial fan project and is not affiliated with Adult Swim or the official Rick and Morty brand.
                     </p>
                 </section>
             </div>

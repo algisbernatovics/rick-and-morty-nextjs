@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Menu, X, Users, Tv, MapPin, Info } from "lucide-react";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 const navItems = [
     {
@@ -33,6 +33,7 @@ const navItems = [
 export function Navbar() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
+    const shouldReduceMotion = useReducedMotion();
 
     const checkActive = (item: typeof navItems[0]) => {
         if (item.name === "Characters" && pathname === "/") return true;
@@ -43,11 +44,11 @@ export function Navbar() {
     };
 
     return (
-        <nav className="sticky top-0 z-50 w-full glass">
+        <nav className="sticky top-0 z-50 w-full border-b border-border-subtle bg-surface-glass/95 backdrop-blur-xl">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     <div className="flex items-center">
-                        <Link href="/" className="flex-shrink-0">
+                        <Link href="/" className="focus-ring flex-shrink-0 rounded-lg">
                             <span className="text-2xl font-black tracking-tighter text-primary">
                                 RICK<span className="text-secondary">&</span>MORTY
                             </span>
@@ -63,8 +64,9 @@ export function Navbar() {
                                     <Link
                                         key={item.name}
                                         href={item.href}
+                                        aria-current={isActive ? "page" : undefined}
                                         className={cn(
-                                            "relative px-3 py-2 text-sm font-bold transition-all hover:text-primary flex items-center gap-2",
+                                            "focus-ring relative flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold transition-colors hover:text-primary",
                                             isActive ? "text-primary" : "text-muted-foreground"
                                         )}
                                     >
@@ -79,9 +81,10 @@ export function Navbar() {
                                                 className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
                                                 initial={false}
                                                 transition={{
-                                                    type: "spring",
+                                                    type: shouldReduceMotion ? "tween" : "spring",
                                                     stiffness: 380,
-                                                    damping: 30
+                                                    damping: 30,
+                                                    duration: shouldReduceMotion ? 0 : undefined,
                                                 }}
                                             />
                                         )}
@@ -93,10 +96,14 @@ export function Navbar() {
 
                     <div className="flex md:hidden">
                         <button
+                            type="button"
                             onClick={() => setIsOpen(!isOpen)}
-                            className="text-muted-foreground hover:text-white focus:outline-none"
+                            aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+                            aria-controls="mobile-navigation"
+                            aria-expanded={isOpen}
+                            className="focus-ring rounded-lg p-2 text-muted-foreground transition-colors hover:text-text-strong"
                         >
-                            {isOpen ? <X size={28} /> : <Menu size={28} />}
+                            {isOpen ? <X size={28} aria-hidden="true" /> : <Menu size={28} aria-hidden="true" />}
                         </button>
                     </div>
                 </div>
@@ -105,10 +112,11 @@ export function Navbar() {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden glass border-t border-white/10"
+                        id="mobile-navigation"
+                        initial={shouldReduceMotion ? false : { opacity: 0, height: 0 }}
+                        animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, height: "auto" }}
+                        exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                        className="border-t border-border-subtle bg-surface-glass md:hidden"
                     >
                         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                             {navItems.map((item) => {
@@ -119,9 +127,10 @@ export function Navbar() {
                                         key={item.name}
                                         href={item.href}
                                         onClick={() => setIsOpen(false)}
+                                        aria-current={isActive ? "page" : undefined}
                                         className={cn(
-                                            "block px-3 py-4 rounded-md text-base font-medium transition-colors flex items-center gap-3",
-                                            isActive ? "text-primary bg-white/5" : "text-muted-foreground hover:text-primary hover:bg-white/5"
+                                            "focus-ring flex items-center gap-3 rounded-md px-3 py-4 text-base font-medium transition-colors",
+                                            isActive ? "bg-surface-hover text-primary" : "text-muted-foreground hover:bg-surface-hover hover:text-primary"
                                         )}
                                     >
                                         {item.name === "Characters" && <Users size={20} className="shrink-0" />}

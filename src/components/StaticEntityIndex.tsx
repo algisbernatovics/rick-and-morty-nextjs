@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useId, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import type { APIResponse, Character, Episode, LocationData } from "@/types";
 import { CharacterCard } from "@/components/CharacterCard";
@@ -56,6 +56,7 @@ export function StaticEntityIndex({
   const [searchResult, setSearchResult] = useState<APIResponse<EntityItem> | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const searchInputId = useId();
 
   const trimmedQuery = query.trim();
   const activeSearchResult = trimmedQuery.length > 0 ? searchResult : null;
@@ -126,13 +127,21 @@ export function StaticEntityIndex({
     <>
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-12">
         <form onSubmit={handleSubmit} className="relative w-full md:max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+          <label htmlFor={searchInputId} className="sr-only">
+            {searchPlaceholder}
+          </label>
+          <Search
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+            size={20}
+            aria-hidden="true"
+          />
           <input
+            id={searchInputId}
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={searchPlaceholder}
-            className={`w-full pl-12 pr-4 py-4 rounded-2xl glass focus:outline-none focus:ring-2 transition-all font-medium ${entityConfig[entityType].accentClass}`}
+            className={`focus-ring w-full rounded-2xl border border-border-subtle bg-surface-glass py-4 pl-12 pr-4 font-medium transition-colors placeholder:text-muted-foreground hover:border-border-strong ${entityConfig[entityType].accentClass}`}
           />
         </form>
 
@@ -141,33 +150,37 @@ export function StaticEntityIndex({
             <button
               type="button"
               onClick={clearSearch}
-              className="px-4 py-2 rounded-xl glass font-black uppercase tracking-widest text-xs hover:text-primary transition-colors"
+              className="focus-ring rounded-xl border border-border-subtle bg-surface-glass px-4 py-2 text-xs font-black uppercase tracking-widest transition-colors hover:text-primary"
             >
               Clear search
             </button>
           ) : null}
           <p className="text-muted-foreground font-bold uppercase tracking-widest text-sm">
-            {totalLabel}: <span className="text-white">{displayTotal}</span>
+            {totalLabel}: <span className="text-text-strong">{displayTotal}</span>
           </p>
         </div>
       </div>
 
       {error ? (
-        <div className="glass p-8 rounded-3xl mb-8 text-center text-red-400 font-bold">
+        <div className="panel mb-8 rounded-3xl p-8 text-center font-bold text-status-dead" role="alert">
           {error}
         </div>
       ) : null}
 
       {isLoading ? (
-        <div className="glass p-8 rounded-3xl mb-8 text-center text-muted-foreground font-bold uppercase tracking-widest">
+        <div className="panel mb-8 rounded-3xl p-8 text-center font-bold uppercase tracking-widest text-muted-foreground" role="status" aria-live="polite">
           Searching the multiverse...
         </div>
       ) : null}
 
+      <p className="sr-only" role="status" aria-live="polite">
+        Showing {items.length} {entityType} on this page.
+      </p>
+
       {items.length > 0 ? (
         <div className={gridClassName}>{renderItems(entityType, items)}</div>
       ) : (
-        <div className="glass p-12 rounded-3xl text-center border-2 border-dashed border-white/10">
+        <div className="panel rounded-3xl border-2 border-dashed border-border-subtle p-12 text-center">
           <p className="text-2xl font-black text-muted-foreground uppercase tracking-tighter">
             {emptyMessage}
           </p>
@@ -229,8 +242,9 @@ function SearchPagination({
       <button
         type="button"
         disabled={currentPage <= 1 || isLoading}
+        aria-label="Load previous search results page"
         onClick={() => onPageChange(currentPage - 1)}
-        className="px-5 py-3 rounded-xl glass font-bold disabled:opacity-50 disabled:pointer-events-none hover:bg-primary/20 transition-colors"
+        className="focus-ring rounded-xl border border-border-subtle bg-surface-glass px-5 py-3 font-bold transition-colors hover:bg-primary/20 disabled:pointer-events-none disabled:opacity-50"
       >
         Previous
       </button>
@@ -240,8 +254,9 @@ function SearchPagination({
       <button
         type="button"
         disabled={currentPage >= totalPages || isLoading}
+        aria-label="Load next search results page"
         onClick={() => onPageChange(currentPage + 1)}
-        className="px-5 py-3 rounded-xl glass font-bold disabled:opacity-50 disabled:pointer-events-none hover:bg-primary/20 transition-colors"
+        className="focus-ring rounded-xl border border-border-subtle bg-surface-glass px-5 py-3 font-bold transition-colors hover:bg-primary/20 disabled:pointer-events-none disabled:opacity-50"
       >
         Next
       </button>
