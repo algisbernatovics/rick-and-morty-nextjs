@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,24 +21,38 @@ export function Pagination({ currentPage, totalPages, firstPageUrl, pageUrlPrefi
         pages.push(i);
     }
 
+    if (totalPages <= 1) return null;
+
     return (
-        <div className="flex items-center justify-center space-x-2 my-12">
-            <Link
-                href={currentPage > 1 ? getPageUrl(currentPage - 1) : "#"}
-                className={cn(
-                    "p-2 rounded-lg glass transition-all hover:bg-primary/20",
-                    currentPage <= 1 && "opacity-50 pointer-events-none"
-                )}
-            >
-                <ChevronLeft size={20} />
-            </Link>
+        <nav className="my-12 flex items-center justify-center gap-2" aria-label="Pagination">
+            {currentPage > 1 ? (
+                <Link
+                    href={getPageUrl(currentPage - 1)}
+                    aria-label="Go to previous page"
+                    className="focus-ring rounded-lg border border-border-subtle bg-surface-glass p-2 transition-colors hover:bg-primary/20"
+                >
+                    <ChevronLeft size={20} aria-hidden="true" />
+                </Link>
+            ) : (
+                <span
+                    aria-disabled="true"
+                    aria-label="Previous page unavailable"
+                    className="rounded-lg border border-border-subtle bg-surface-glass p-2 opacity-45"
+                >
+                    <ChevronLeft size={20} aria-hidden="true" />
+                </span>
+            )}
 
             {pages[0] > 1 && (
                 <>
-                    <Link href={getPageUrl(1)} className="w-10 h-10 flex items-center justify-center rounded-lg glass hover:bg-primary/20 font-bold transition-all">
+                    <Link
+                        href={getPageUrl(1)}
+                        aria-label="Go to page 1"
+                        className="focus-ring flex h-10 w-10 items-center justify-center rounded-lg border border-border-subtle bg-surface-glass font-bold transition-colors hover:bg-primary/20"
+                    >
                         1
                     </Link>
-                    {pages[0] > 2 && <span className="text-muted-foreground">...</span>}
+                    {pages[0] > 2 && <span className="text-muted-foreground" aria-hidden="true">...</span>}
                 </>
             )}
 
@@ -48,11 +60,13 @@ export function Pagination({ currentPage, totalPages, firstPageUrl, pageUrlPrefi
                 <Link
                     key={page}
                     href={getPageUrl(page)}
+                    aria-label={`Go to page ${page}`}
+                    aria-current={currentPage === page ? "page" : undefined}
                     className={cn(
-                        "w-10 h-10 flex items-center justify-center rounded-lg font-bold transition-all",
+                        "focus-ring flex h-10 w-10 items-center justify-center rounded-lg font-bold transition-colors",
                         currentPage === page
-                            ? "bg-primary text-black shadow-[0_0_15px_rgba(151,206,76,0.5)]"
-                            : "glass hover:bg-primary/20"
+                            ? "bg-primary text-text-inverse shadow-[var(--shadow-primary)]"
+                            : "border border-border-subtle bg-surface-glass hover:bg-primary/20"
                     )}
                 >
                     {page}
@@ -61,22 +75,34 @@ export function Pagination({ currentPage, totalPages, firstPageUrl, pageUrlPrefi
 
             {pages[pages.length - 1] < totalPages && (
                 <>
-                    {pages[pages.length - 1] < totalPages - 1 && <span className="text-muted-foreground">...</span>}
-                    <Link href={getPageUrl(totalPages)} className="w-10 h-10 flex items-center justify-center rounded-lg glass hover:bg-primary/20 font-bold transition-all">
+                    {pages[pages.length - 1] < totalPages - 1 && <span className="text-muted-foreground" aria-hidden="true">...</span>}
+                    <Link
+                        href={getPageUrl(totalPages)}
+                        aria-label={`Go to page ${totalPages}`}
+                        className="focus-ring flex h-10 w-10 items-center justify-center rounded-lg border border-border-subtle bg-surface-glass font-bold transition-colors hover:bg-primary/20"
+                    >
                         {totalPages}
                     </Link>
                 </>
             )}
 
-            <Link
-                href={currentPage < totalPages ? getPageUrl(currentPage + 1) : "#"}
-                className={cn(
-                    "p-2 rounded-lg glass transition-all hover:bg-primary/20",
-                    currentPage >= totalPages && "opacity-50 pointer-events-none"
-                )}
-            >
-                <ChevronRight size={20} />
-            </Link>
-        </div>
+            {currentPage < totalPages ? (
+                <Link
+                    href={getPageUrl(currentPage + 1)}
+                    aria-label="Go to next page"
+                    className="focus-ring rounded-lg border border-border-subtle bg-surface-glass p-2 transition-colors hover:bg-primary/20"
+                >
+                    <ChevronRight size={20} aria-hidden="true" />
+                </Link>
+            ) : (
+                <span
+                    aria-disabled="true"
+                    aria-label="Next page unavailable"
+                    className="rounded-lg border border-border-subtle bg-surface-glass p-2 opacity-45"
+                >
+                    <ChevronRight size={20} aria-hidden="true" />
+                </span>
+            )}
+        </nav>
     );
 }

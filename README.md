@@ -77,9 +77,16 @@ npm run start
 
 - `src/app/`: Next.js App Router pages and layouts.
 - `src/components/`: Reusable React components (Navbar, CharacterCard, Pagination, etc.).
+- `src/components/ui/`: Shared design primitives such as panels, status badges, and safe JSON-LD output.
 - `src/lib/`: Unified API client and utility functions.
 - `src/types/`: Centralized TypeScript interfaces.
 - `src/hooks/`: Custom React hooks (if any).
+
+## Design and Security Notes
+
+- Semantic design tokens live in `src/app/globals.css` and back reusable utilities such as `panel`, `panel-interactive`, `focus-ring`, and `eyebrow`.
+- Static-host browser security headers are configured in `vercel.json`.
+- Structured data is rendered through the escaped `JsonLd` helper to avoid unsafe script content.
 
 ---
 
