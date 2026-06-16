@@ -9,7 +9,11 @@ const SITE_DESCRIPTION =
 type OpenGraphType = "website" | "article";
 
 function getBaseUrl() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || DEFAULT_SITE_URL;
+  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.SITE_URL ||
+    (vercelUrl ? `https://${vercelUrl}` : DEFAULT_SITE_URL);
 
   try {
     return new URL(siteUrl);

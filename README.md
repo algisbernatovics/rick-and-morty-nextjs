@@ -58,6 +58,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Building Static Production Output
 
+Set the canonical production URL before building so metadata, `robots.txt`, and `sitemap.xml` do not point at localhost:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://your-domain.example npm run build
+```
+
+On Vercel, the app also falls back to `VERCEL_PROJECT_PRODUCTION_URL` or `VERCEL_URL` when `NEXT_PUBLIC_SITE_URL` is not set.
+
 ```bash
 npm run build
 npm run start
