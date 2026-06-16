@@ -6,8 +6,10 @@
     "predev": "rm -f .next/dev/lock",
     "dev": "next dev --webpack",
     "dev:turbo": "rm -f .next/dev/lock && next dev",
+    "generate:data": "node scripts/generate-rick-and-morty-data.mjs",
+    "prebuild": "npm run generate:data",
     "build": "next build",
-    "start": "next start",
+    "start": "npx serve@latest out",
     "lint": "eslint"
   },
   "dependencies": {

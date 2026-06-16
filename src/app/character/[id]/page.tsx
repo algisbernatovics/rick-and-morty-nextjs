@@ -1,15 +1,22 @@
 import type { Metadata } from "next";
-import { rickAndMortyApi } from "@/lib/api";
-import { getEpisodeIdFromUrl, cn } from "@/lib/utils";
+import { cn, getIdFromUrl } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, MapPin, Tv } from "lucide-react";
 import { EpisodeRow } from "@/components/EpisodeRow";
 import { buildCharacterJsonLd, buildCharacterSummary, createMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
+import { getCharacterById, getCharacterIds, getEpisodesByIds } from "@/lib/static-data";
 
 interface CharacterPageProps {
     params: Promise<{ id: string }>;
+}
+
+export const dynamic = "force-static";
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+    return getCharacterIds().map((id) => ({ id: String(id) }));
 }
 
 export async function generateMetadata({ params }: CharacterPageProps): Promise<Metadata> {
@@ -24,21 +31,21 @@ export async function generateMetadata({ params }: CharacterPageProps): Promise<
         });
     }
 
-    try {
-        const character = await rickAndMortyApi.getSingleCharacter(characterId);
+    const character = getCharacterById(characterId);
 
-        return createMetadata({
-            title: `${character.name} Character Guide`,
-            description: buildCharacterSummary(character),
-            path: `/character/${character.id}`,
-        });
-    } catch {
+    if (!character) {
         return createMetadata({
             title: "Character Not Found",
             description: "The requested Rick and Morty character page could not be found.",
             path: `/character/${id}`,
         });
     }
+
+    return createMetadata({
+        title: `${character.name} Character Guide`,
+        description: buildCharacterSummary(character),
+        path: `/character/${character.id}`,
+    });
 }
 
 export default async function CharacterPage({ params }: CharacterPageProps) {
@@ -49,14 +56,14 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
         notFound();
     }
 
-    const character = await rickAndMortyApi.getSingleCharacter(characterId).catch(() => null);
+    const character = getCharacterById(characterId);
 
     if (!character) {
         notFound();
     }
 
-    const episodeIds = character.episode.map(url => getEpisodeIdFromUrl(url));
-    const episodes = await rickAndMortyApi.getMultipleEpisodes(episodeIds);
+    const episodeIds = character.episode.map((url) => getIdFromUrl(url));
+    const episodes = getEpisodesByIds(episodeIds);
     const summary = buildCharacterSummary(character);
     const jsonLd = buildCharacterJsonLd(character);
 

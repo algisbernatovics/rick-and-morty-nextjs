@@ -1,61 +1,21 @@
 import type { Metadata } from "next";
-import { rickAndMortyApi } from "@/lib/api";
-import { CharacterCard } from "@/components/CharacterCard";
-import { Pagination } from "@/components/Pagination";
-import { Search, Users } from "lucide-react";
-import { buildSearchResultsDescription, createMetadata } from "@/lib/seo";
-import Link from "next/link";
+import { Users } from "lucide-react";
+import { StaticEntityIndex } from "@/components/StaticEntityIndex";
+import { createMetadata } from "@/lib/seo";
+import { getAllCharacters, paginateItems } from "@/lib/static-data";
 
-interface HomeProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
+export const dynamic = "force-static";
 
-export async function generateMetadata({ searchParams }: HomeProps): Promise<Metadata> {
-  const params = await searchParams;
-  const name = typeof params.name === "string" ? params.name : undefined;
+export const metadata: Metadata = createMetadata({
+  title: "Rick and Morty Characters Guide",
+  description:
+    "Browse a searchable Rick and Morty character guide with names, species, status, origin, and linked episode appearances.",
+  path: "/",
+});
 
-  return createMetadata({
-    title: name ? `Rick and Morty Characters Matching ${name}` : "Rick and Morty Characters Guide",
-    description: buildSearchResultsDescription({
-      entityLabel: "characters",
-      query: name,
-      fallbackDescription:
-        "Browse a searchable Rick and Morty character guide with names, species, status, origin, and linked episode appearances.",
-    }),
-    path: "/",
-  });
-}
-
-export default async function Home({ searchParams }: HomeProps) {
-  const params = await searchParams;
-  const page = typeof params.page === "string" ? parseInt(params.page) : 1;
-  const name = typeof params.name === "string" ? params.name : undefined;
-
-  const searchUrlParams = new URLSearchParams();
-  searchUrlParams.set("page", page.toString());
-  if (name) searchUrlParams.set("name", name);
-
-  const result = await rickAndMortyApi.getCharacters(searchUrlParams).catch((error: Error) => ({
-    error,
-  }));
-
-  if ("error" in result) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-        <h2 className="text-4xl font-black mb-4 text-red-500">WUBBA LUBBA DUB DUB!</h2>
-        <p className="text-xl text-muted-foreground mb-8 max-w-md">
-          {result.error.message === "Resource not found"
-            ? "We could not find any Rick and Morty characters matching that search."
-            : "Something went wrong in this dimension. Please try again later."}
-        </p>
-        <Link href="/" className="px-8 py-4 rounded-xl bg-primary text-black font-black hover:scale-105 transition-transform">
-          BACK TO REALITY
-        </Link>
-      </div>
-    );
-  }
-
-  const { results: characters, info } = result;
+export default function Home() {
+  const characters = getAllCharacters();
+  const paginatedCharacters = paginateItems(characters, 1);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -69,35 +29,19 @@ export default async function Home({ searchParams }: HomeProps) {
         <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
           Explore a searchable Rick and Morty character index with names, species, status, origin details, and links to every character page and episode appearance in the multiverse.
         </p>
-
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-          <form action="/" className="relative w-full md:max-w-md">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-            <input
-              type="text"
-              name="name"
-              defaultValue={name}
-              placeholder="Search characters..."
-              className="w-full pl-12 pr-4 py-4 rounded-2xl glass focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium"
-            />
-          </form>
-
-          <p className="text-muted-foreground font-bold uppercase tracking-widest text-sm">
-            Total Characters: <span className="text-white">{info.count}</span>
-          </p>
-        </div>
       </header>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {characters.map((character) => (
-          <CharacterCard key={character.id} character={character} />
-        ))}
-      </div>
-
-      <Pagination
-        currentPage={page}
-        totalPages={info.pages}
-        baseUrl="/"
+      <StaticEntityIndex
+        entityType="characters"
+        initialItems={paginatedCharacters.items}
+        currentPage={paginatedCharacters.currentPage}
+        totalPages={paginatedCharacters.totalPages}
+        totalCount={paginatedCharacters.totalCount}
+        firstPageUrl="/"
+        pageUrlPrefix="/characters/page"
+        searchPlaceholder="Search characters..."
+        emptyMessage="No Rick and Morty characters found in this dimension."
+        totalLabel="Total Characters"
       />
     </div>
   );

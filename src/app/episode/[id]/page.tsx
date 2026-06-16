@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
-import { rickAndMortyApi } from "@/lib/api";
-import { getEpisodeIdFromUrl } from "@/lib/utils";
+import { getIdFromUrl } from "@/lib/utils";
 import { CharacterCard } from "@/components/CharacterCard";
 import { ChevronLeft, Calendar, Tv, Users } from "lucide-react";
 import Link from "next/link";
 import { buildEpisodeJsonLd, buildEpisodeSummary, createMetadata, formatEpisodeCode } from "@/lib/seo";
 import { notFound } from "next/navigation";
+import { getCharactersByIds, getEpisodeById, getEpisodeIds } from "@/lib/static-data";
 
 interface EpisodePageProps {
     params: Promise<{ id: string }>;
+}
+
+export const dynamic = "force-static";
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+    return getEpisodeIds().map((id) => ({ id: String(id) }));
 }
 
 export async function generateMetadata({ params }: EpisodePageProps): Promise<Metadata> {
@@ -23,21 +30,21 @@ export async function generateMetadata({ params }: EpisodePageProps): Promise<Me
         });
     }
 
-    try {
-        const episode = await rickAndMortyApi.getSingleEpisode(episodeId);
+    const episode = getEpisodeById(episodeId);
 
-        return createMetadata({
-            title: `${episode.name} Episode Guide`,
-            description: buildEpisodeSummary(episode),
-            path: `/episode/${episode.id}`,
-        });
-    } catch {
+    if (!episode) {
         return createMetadata({
             title: "Episode Not Found",
             description: "The requested Rick and Morty episode page could not be found.",
             path: `/episode/${id}`,
         });
     }
+
+    return createMetadata({
+        title: `${episode.name} Episode Guide`,
+        description: buildEpisodeSummary(episode),
+        path: `/episode/${episode.id}`,
+    });
 }
 
 export default async function EpisodePage({ params }: EpisodePageProps) {
@@ -48,14 +55,14 @@ export default async function EpisodePage({ params }: EpisodePageProps) {
         notFound();
     }
 
-    const episode = await rickAndMortyApi.getSingleEpisode(episodeId).catch(() => null);
+    const episode = getEpisodeById(episodeId);
 
     if (!episode) {
         notFound();
     }
 
-    const characterIds = episode.characters.map(url => getEpisodeIdFromUrl(url));
-    const characters = await rickAndMortyApi.getMultipleCharacters(characterIds);
+    const characterIds = episode.characters.map((url) => getIdFromUrl(url));
+    const characters = getCharactersByIds(characterIds);
     const summary = buildEpisodeSummary(episode);
     const jsonLd = buildEpisodeJsonLd(episode);
 
