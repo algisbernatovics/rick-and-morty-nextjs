@@ -3,6 +3,7 @@ import { Inter, Outfit } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { getMetadataBase, getSiteDescription, getSiteName } from "@/lib/seo";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -67,11 +68,7 @@ export default function RootLayout({
         <main className="min-h-screen bg-background">
           {children}
         </main>
-        <footer className="border-t border-border-subtle bg-surface-glass py-10 text-center">
-          <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} Rick and Morty Explorer. Data provided by the <a href="https://rickandmortyapi.com/" target="_blank" rel="noopener noreferrer" className="focus-ring rounded text-primary hover:underline">Rick and Morty API</a>.
-          </p>
-        </footer>
+        <Footer />
       </body>
     </html>
   );
