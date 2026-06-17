@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Tv } from "lucide-react";
+import { MapPin, Tv, Users } from "lucide-react";
 import { StaticEntityIndex } from "@/components/StaticEntityIndex";
 import { createMetadata } from "@/lib/seo";
 import { getAllEpisodes, getPaginatedEpisodeParams, paginateItems } from "@/lib/static-data";
+import { ExploreLinks } from "@/components/ExploreLinks";
 
 interface EpisodeIndexPageProps {
   params: Promise<{ page: string }>;
@@ -50,6 +51,12 @@ export default async function EpisodeIndexPage({ params }: EpisodeIndexPageProps
         <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
           Continue browsing the Rick and Morty episode guide with searchable episode names, season codes, original air dates, and links to the characters featured in each story.
         </p>
+        <ExploreLinks
+          links={[
+            { href: "/", label: "View characters", icon: Users },
+            { href: "/locations", label: "Explore locations", icon: MapPin },
+          ]}
+        />
       </header>
 
       <StaticEntityIndex

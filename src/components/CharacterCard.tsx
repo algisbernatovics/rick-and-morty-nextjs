@@ -2,31 +2,40 @@ import Image from "next/image";
 import Link from "next/link";
 import { Character } from "@/types";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { getEntityHrefFromApiUrl } from "@/lib/utils";
 
 interface CharacterCardProps {
     character: Character;
 }
 
 export function CharacterCard({ character }: CharacterCardProps) {
+    const characterHref = `/character/${character.id}`;
+    const currentLocationHref = getEntityHrefFromApiUrl(character.location.url, "location");
+    const originHref = getEntityHrefFromApiUrl(character.origin.url, "location");
+
     return (
-        <Link
-            href={`/character/${character.id}`}
-            aria-label={`View ${character.name} character guide`}
+        <article
             className="panel panel-interactive focus-ring group relative flex h-full flex-col overflow-hidden rounded-2xl"
         >
             <div className="p-4">
-                <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-border-subtle bg-surface-hover p-1">
-                    <div className="h-full w-full overflow-hidden rounded-lg">
-                        <Image
-                            src={character.image}
-                            alt={character.name}
-                            width={400}
-                            height={400}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        />
+                <Link
+                    href={characterHref}
+                    aria-label={`View ${character.name} character guide`}
+                    className="focus-ring block rounded-xl"
+                >
+                    <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-border-subtle bg-surface-hover p-1">
+                        <div className="h-full w-full overflow-hidden rounded-lg">
+                            <Image
+                                src={character.image}
+                                alt={character.name}
+                                width={400}
+                                height={400}
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                            />
+                        </div>
                     </div>
-                </div>
+                </Link>
             </div>
 
             <div className="flex flex-1 flex-col p-5">
@@ -37,23 +46,43 @@ export function CharacterCard({ character }: CharacterCardProps) {
                     </span>
                 </div>
 
-                <h3 className="mb-4 line-clamp-1 text-xl font-black text-text-strong transition-colors group-hover:text-primary">
-                    {character.name}
-                </h3>
+                <Link href={characterHref} className="focus-ring mb-4 rounded">
+                    <h3 className="line-clamp-1 text-xl font-black text-text-strong transition-colors group-hover:text-primary">
+                        {character.name}
+                    </h3>
+                </Link>
 
                 <div className="space-y-4">
                     <div>
                         <p className="eyebrow">Last known location</p>
-                        <p className="line-clamp-1 text-sm font-medium text-text-soft transition-colors group-hover:text-secondary">
-                            {character.location.name}
-                        </p>
+                        {currentLocationHref ? (
+                            <Link
+                                href={currentLocationHref}
+                                className="focus-ring line-clamp-1 rounded text-sm font-medium text-text-soft transition-colors hover:text-secondary"
+                            >
+                                {character.location.name}
+                            </Link>
+                        ) : (
+                            <p className="line-clamp-1 text-sm font-medium text-text-soft">
+                                {character.location.name}
+                            </p>
+                        )}
                     </div>
 
                     <div>
                         <p className="eyebrow">Origin</p>
-                        <p className="line-clamp-1 text-sm font-medium text-text-soft">
-                            {character.origin.name}
-                        </p>
+                        {originHref ? (
+                            <Link
+                                href={originHref}
+                                className="focus-ring line-clamp-1 rounded text-sm font-medium text-text-soft transition-colors hover:text-secondary"
+                            >
+                                {character.origin.name}
+                            </Link>
+                        ) : (
+                            <p className="line-clamp-1 text-sm font-medium text-text-soft">
+                                {character.origin.name}
+                            </p>
+                        )}
                     </div>
                 </div>
             </div>
@@ -63,6 +92,6 @@ export function CharacterCard({ character }: CharacterCardProps) {
                     #{character.id}
                 </span>
             </div>
-        </Link>
+        </article>
     );
 }

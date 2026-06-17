@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { Home, MapPin, SearchX, Tv, Users } from "lucide-react";
+import { Heart, Home, MapPin, SearchX, Tv, Users } from "lucide-react";
 
 const recoveryLinks = [
   { href: "/", label: "Browse characters", icon: Users },
   { href: "/episodes", label: "Browse episodes", icon: Tv },
   { href: "/locations", label: "Browse locations", icon: MapPin },
+  { href: "/about", label: "About this guide", icon: Heart },
 ];
 
 export default function NotFound() {

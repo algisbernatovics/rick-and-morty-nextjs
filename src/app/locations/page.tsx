@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { MapPin } from "lucide-react";
+import { MapPin, Tv, Users } from "lucide-react";
 import { StaticEntityIndex } from "@/components/StaticEntityIndex";
 import { createMetadata } from "@/lib/seo";
 import { getAllLocations, paginateItems } from "@/lib/static-data";
+import { ExploreLinks } from "@/components/ExploreLinks";
 
 export const dynamic = "force-static";
 
@@ -29,6 +30,12 @@ export default function LocationsPage() {
                 <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
                     Explore Rick and Morty locations across dimensions, location types, and resident lists with direct links to character pages throughout the universe.
                 </p>
+                <ExploreLinks
+                    links={[
+                        { href: "/", label: "View characters", icon: Users },
+                        { href: "/episodes", label: "Episode guide", icon: Tv },
+                    ]}
+                />
             </header>
 
             <StaticEntityIndex

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { getIdFromUrl } from "@/lib/utils";
 import { CharacterCard } from "@/components/CharacterCard";
-import { ChevronLeft, Calendar, Tv, Users } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, MapPin, Tv, Users } from "lucide-react";
 import Link from "next/link";
 import { buildEpisodeJsonLd, buildEpisodeSummary, createMetadata, formatEpisodeCode } from "@/lib/seo";
 import { notFound } from "next/navigation";
-import { getCharactersByIds, getEpisodeById, getEpisodeIds } from "@/lib/static-data";
+import { getCharactersByIds, getEpisodeById, getEpisodeIds, getLocationById } from "@/lib/static-data";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Panel } from "@/components/ui/Panel";
 
@@ -67,6 +67,20 @@ export default async function EpisodePage({ params }: EpisodePageProps) {
     const characters = getCharactersByIds(characterIds);
     const summary = buildEpisodeSummary(episode);
     const jsonLd = buildEpisodeJsonLd(episode);
+    const previousEpisode = getEpisodeById(episode.id - 1);
+    const nextEpisode = getEpisodeById(episode.id + 1);
+    const connectedLocations = Array.from(
+        new Map(
+            characters
+                .flatMap((character) => [character.origin.url, character.location.url])
+                .map((url) => {
+                    const locationId = getIdFromUrl(url);
+                    return Number.isFinite(locationId) ? getLocationById(locationId) : undefined;
+                })
+                .filter((location): location is NonNullable<ReturnType<typeof getLocationById>> => Boolean(location))
+                .map((location) => [location.id, location])
+        ).values()
+    ).slice(0, 8);
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-12">
@@ -107,6 +121,59 @@ export default async function EpisodePage({ params }: EpisodePageProps) {
                     </Panel>
                 </div>
             </header>
+
+            {(previousEpisode || nextEpisode) ? (
+                <section className="mb-14 grid gap-4 md:grid-cols-2" aria-label="Adjacent episodes">
+                    {previousEpisode ? (
+                        <Panel className="rounded-2xl p-5">
+                            <p className="eyebrow mb-2">Previous episode</p>
+                            <Link
+                                href={`/episode/${previousEpisode.id}`}
+                                className="focus-ring inline-flex items-center gap-2 rounded text-lg font-black text-text-strong transition-colors hover:text-primary"
+                            >
+                                <ChevronLeft size={18} aria-hidden="true" />
+                                {previousEpisode.name}
+                            </Link>
+                        </Panel>
+                    ) : <div />}
+                    {nextEpisode ? (
+                        <Panel className="rounded-2xl p-5 md:text-right">
+                            <p className="eyebrow mb-2">Next episode</p>
+                            <Link
+                                href={`/episode/${nextEpisode.id}`}
+                                className="focus-ring inline-flex items-center gap-2 rounded text-lg font-black text-text-strong transition-colors hover:text-primary"
+                            >
+                                {nextEpisode.name}
+                                <ChevronRight size={18} aria-hidden="true" />
+                            </Link>
+                        </Panel>
+                    ) : null}
+                </section>
+            ) : null}
+
+            {connectedLocations.length > 0 ? (
+                <section className="mb-14">
+                    <div className="mb-6 flex items-center justify-center gap-3">
+                        <MapPin className="text-secondary" size={28} aria-hidden="true" />
+                        <h2 className="text-center text-2xl font-black uppercase tracking-tight text-text-strong">
+                            Locations connected to this episode
+                        </h2>
+                    </div>
+                    <Panel className="rounded-3xl p-6">
+                        <div className="flex flex-wrap justify-center gap-3">
+                            {connectedLocations.map((location) => (
+                                <Link
+                                    key={location.id}
+                                    href={`/location/${location.id}`}
+                                    className="focus-ring rounded-full border border-border-subtle bg-surface-glass px-4 py-2 text-sm font-bold text-text-soft transition-colors hover:text-secondary"
+                                >
+                                    {location.name}
+                                </Link>
+                            ))}
+                        </div>
+                    </Panel>
+                </section>
+            ) : null}
 
             <section>
                 <div className="flex items-center justify-center gap-3 mb-8">

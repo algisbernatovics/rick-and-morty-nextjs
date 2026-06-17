@@ -5,7 +5,7 @@ import { ChevronLeft, Globe, MapPin, Users } from "lucide-react";
 import Link from "next/link";
 import { buildLocationJsonLd, buildLocationSummary, createMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
-import { getCharactersByIds, getLocationById, getLocationIds } from "@/lib/static-data";
+import { getAllLocations, getCharactersByIds, getLocationById, getLocationIds } from "@/lib/static-data";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Panel } from "@/components/ui/Panel";
 
@@ -67,6 +67,12 @@ export default async function LocationPage({ params }: LocationPageProps) {
     const characters = getCharactersByIds(characterIds);
     const summary = buildLocationSummary(location);
     const jsonLd = buildLocationJsonLd(location);
+    const relatedLocations = getAllLocations()
+        .filter((candidate) => {
+            if (candidate.id === location.id) return false;
+            return candidate.dimension === location.dimension || candidate.type === location.type;
+        })
+        .slice(0, 6);
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-12">
@@ -130,6 +136,30 @@ export default async function LocationPage({ params }: LocationPageProps) {
                     </Panel>
                 )}
             </section>
+
+            {relatedLocations.length > 0 ? (
+                <section className="mt-16">
+                    <div className="mb-6 flex items-center justify-center gap-3">
+                        <MapPin className="text-primary" size={28} aria-hidden="true" />
+                        <h2 className="text-center text-2xl font-black uppercase tracking-tight text-text-strong">
+                            Related Rick and Morty locations
+                        </h2>
+                    </div>
+                    <Panel className="rounded-3xl p-6">
+                        <div className="flex flex-wrap justify-center gap-3">
+                            {relatedLocations.map((relatedLocation) => (
+                                <Link
+                                    key={relatedLocation.id}
+                                    href={`/location/${relatedLocation.id}`}
+                                    className="focus-ring rounded-full border border-border-subtle bg-surface-glass px-4 py-2 text-sm font-bold text-text-soft transition-colors hover:text-secondary"
+                                >
+                                    {relatedLocation.name}
+                                </Link>
+                            ))}
+                        </div>
+                    </Panel>
+                </section>
+            ) : null}
         </div>
     );
 }

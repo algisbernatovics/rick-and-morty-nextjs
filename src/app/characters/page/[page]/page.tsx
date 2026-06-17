@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Users } from "lucide-react";
+import { MapPin, Tv, Users } from "lucide-react";
 import { StaticEntityIndex } from "@/components/StaticEntityIndex";
 import { createMetadata } from "@/lib/seo";
 import { getAllCharacters, getPaginatedCharacterParams, paginateItems } from "@/lib/static-data";
+import { ExploreLinks } from "@/components/ExploreLinks";
 
 interface CharacterIndexPageProps {
   params: Promise<{ page: string }>;
@@ -50,6 +51,12 @@ export default async function CharacterIndexPage({ params }: CharacterIndexPageP
         <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
           Continue exploring the static Rick and Morty character index with names, species, status, origin details, and links to every character page and episode appearance.
         </p>
+        <ExploreLinks
+          links={[
+            { href: "/episodes", label: "Browse episodes", icon: Tv },
+            { href: "/locations", label: "Explore locations", icon: MapPin },
+          ]}
+        />
       </header>
 
       <StaticEntityIndex

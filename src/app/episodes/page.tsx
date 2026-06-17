@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Tv } from "lucide-react";
+import { MapPin, Tv, Users } from "lucide-react";
 import { StaticEntityIndex } from "@/components/StaticEntityIndex";
 import { createMetadata } from "@/lib/seo";
 import { getAllEpisodes, paginateItems } from "@/lib/static-data";
+import { ExploreLinks } from "@/components/ExploreLinks";
 
 export const dynamic = "force-static";
 
@@ -29,6 +30,12 @@ export default function EpisodesPage() {
                 <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
                     Browse the Rick and Morty episode guide with searchable episode names, season codes, original air dates, and links to the characters featured in each story.
                 </p>
+                <ExploreLinks
+                    links={[
+                        { href: "/", label: "View characters", icon: Users },
+                        { href: "/locations", label: "Explore locations", icon: MapPin },
+                    ]}
+                />
             </header>
 
             <StaticEntityIndex

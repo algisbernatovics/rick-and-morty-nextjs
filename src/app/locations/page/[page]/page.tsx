@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { MapPin } from "lucide-react";
+import { MapPin, Tv, Users } from "lucide-react";
 import { StaticEntityIndex } from "@/components/StaticEntityIndex";
 import { createMetadata } from "@/lib/seo";
 import { getAllLocations, getPaginatedLocationParams, paginateItems } from "@/lib/static-data";
+import { ExploreLinks } from "@/components/ExploreLinks";
 
 interface LocationIndexPageProps {
   params: Promise<{ page: string }>;
@@ -50,6 +51,12 @@ export default async function LocationIndexPage({ params }: LocationIndexPagePro
         <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
           Continue exploring Rick and Morty locations across dimensions, location types, and resident lists with direct links to character pages throughout the universe.
         </p>
+        <ExploreLinks
+          links={[
+            { href: "/", label: "View characters", icon: Users },
+            { href: "/episodes", label: "Episode guide", icon: Tv },
+          ]}
+        />
       </header>
 
       <StaticEntityIndex

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Users } from "lucide-react";
+import { MapPin, Tv, Users } from "lucide-react";
 import { StaticEntityIndex } from "@/components/StaticEntityIndex";
 import { createMetadata } from "@/lib/seo";
 import { getAllCharacters, paginateItems } from "@/lib/static-data";
+import { ExploreLinks } from "@/components/ExploreLinks";
 
 export const dynamic = "force-static";
 
@@ -29,6 +30,12 @@ export default function Home() {
         <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
           Explore a searchable Rick and Morty character index with names, species, status, origin details, and links to every character page and episode appearance in the multiverse.
         </p>
+        <ExploreLinks
+          links={[
+            { href: "/episodes", label: "Browse episodes", icon: Tv },
+            { href: "/locations", label: "Explore locations", icon: MapPin },
+          ]}
+        />
       </header>
 
       <StaticEntityIndex

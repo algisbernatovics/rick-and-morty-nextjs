@@ -13,9 +13,9 @@ export const metadata: Metadata = createMetadata({
 
 export default function AboutPage() {
     const stats = [
-        { label: "Characters", value: getAllCharacters().length.toLocaleString(), tone: "text-primary" },
-        { label: "Episodes", value: getAllEpisodes().length.toLocaleString(), tone: "text-secondary" },
-        { label: "Locations", value: getAllLocations().length.toLocaleString(), tone: "text-accent" },
+        { label: "Characters", value: getAllCharacters().length.toLocaleString(), tone: "text-primary", href: "/" },
+        { label: "Episodes", value: getAllEpisodes().length.toLocaleString(), tone: "text-secondary", href: "/episodes" },
+        { label: "Locations", value: getAllLocations().length.toLocaleString(), tone: "text-accent", href: "/locations" },
     ];
     const snapshotDate = new Intl.DateTimeFormat("en", {
         month: "long",
@@ -33,17 +33,23 @@ export default function AboutPage() {
                     Built for fast browsing and crawlable SEO
                 </h1>
                 <p className="mx-auto max-w-3xl text-xl font-medium leading-8 text-muted-foreground">
-                    Rick and Morty Explorer is a fan-made, English-language guide that turns the public API into static character,
-                    episode, and location pages with internal links, structured data, and a persistent sitemap.
+                    Rick and Morty Explorer is a fan-made, English-language guide that turns the public API into static{" "}
+                    <Link href="/" className="focus-ring rounded font-bold text-primary hover:underline">character</Link>,{" "}
+                    <Link href="/episodes" className="focus-ring rounded font-bold text-secondary hover:underline">episode</Link>, and{" "}
+                    <Link href="/locations" className="focus-ring rounded font-bold text-accent hover:underline">location</Link> pages with internal links, structured data, and a persistent sitemap.
                 </p>
             </header>
 
             <section className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3" aria-label="Static export coverage">
                 {stats.map((stat) => (
-                    <div key={stat.label} className="panel rounded-3xl p-6 text-center">
+                    <Link
+                        key={stat.label}
+                        href={stat.href}
+                        className="panel panel-interactive focus-ring rounded-3xl p-6 text-center"
+                    >
                         <p className={`text-4xl font-black tracking-tighter ${stat.tone}`}>{stat.value}</p>
                         <p className="eyebrow mt-2">{stat.label} exported</p>
-                    </div>
+                    </Link>
                 ))}
             </section>
 

@@ -18,4 +18,11 @@ export function getIdFromUrl(url: string): number {
     return parseInt(parts[parts.length - 1]);
 }
 
+export function getEntityHrefFromApiUrl(url: string, routeSegment: string) {
+    if (!url) return undefined;
+
+    const id = getIdFromUrl(url);
+    return Number.isFinite(id) ? `/${routeSegment}/${id}` : undefined;
+}
+
 export const getEpisodeIdFromUrl = getIdFromUrl;

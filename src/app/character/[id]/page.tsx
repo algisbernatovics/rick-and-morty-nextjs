@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getIdFromUrl } from "@/lib/utils";
+import { getEntityHrefFromApiUrl, getIdFromUrl } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, MapPin, Tv } from "lucide-react";
@@ -69,6 +69,8 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
     const episodes = getEpisodesByIds(episodeIds);
     const summary = buildCharacterSummary(character);
     const jsonLd = buildCharacterJsonLd(character);
+    const originHref = getEntityHrefFromApiUrl(character.origin.url, "location");
+    const currentLocationHref = getEntityHrefFromApiUrl(character.location.url, "location");
 
     return (
         <div className="max-w-5xl mx-auto px-4 py-12">
@@ -129,7 +131,16 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
                             <MapPin className="text-primary shrink-0" size={24} aria-hidden="true" />
                             <div>
                                 <p className="eyebrow mb-1">Origin</p>
-                                <p className="text-lg font-bold leading-tight text-text-strong">{character.origin.name}</p>
+                                {originHref ? (
+                                    <Link
+                                        href={originHref}
+                                        className="focus-ring rounded text-lg font-bold leading-tight text-text-strong transition-colors hover:text-primary"
+                                    >
+                                        {character.origin.name}
+                                    </Link>
+                                ) : (
+                                    <p className="text-lg font-bold leading-tight text-text-strong">{character.origin.name}</p>
+                                )}
                             </div>
                         </Panel>
 
@@ -137,7 +148,16 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
                             <MapPin className="text-secondary shrink-0" size={24} aria-hidden="true" />
                             <div>
                                 <p className="eyebrow mb-1">Last Known Location</p>
-                                <p className="text-lg font-bold leading-tight text-text-strong">{character.location.name}</p>
+                                {currentLocationHref ? (
+                                    <Link
+                                        href={currentLocationHref}
+                                        className="focus-ring rounded text-lg font-bold leading-tight text-text-strong transition-colors hover:text-secondary"
+                                    >
+                                        {character.location.name}
+                                    </Link>
+                                ) : (
+                                    <p className="text-lg font-bold leading-tight text-text-strong">{character.location.name}</p>
+                                )}
                             </div>
                         </Panel>
                     </section>
