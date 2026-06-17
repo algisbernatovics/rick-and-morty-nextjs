@@ -2,9 +2,11 @@
 
 A TypeScript Next.js explorer for Rick and Morty characters, locations, and episodes.
 
+Live demo: [rickmorty-hub.vercel.app](https://rickmorty-hub.vercel.app)
+
 ## Overview
 
-Rick and Morty Next.js is a modern App Router project built around [The Rick and Morty API](https://rickandmortyapi.com/). It provides typed API helpers, reusable UI styling, and data-generation support for a polished portfolio version of the earlier PHP API client.
+Rick and Morty Next.js is a modern App Router project built around [The Rick and Morty API](https://rickandmortyapi.com/). It provides typed API helpers, reusable UI styling, data-generation support, and a polished public demo.
 
 ## Features
 
@@ -25,16 +27,12 @@ Rick and Morty Next.js is a modern App Router project built around [The Rick and
 - Lucide React
 - Rick and Morty API
 
-## Getting Started
-
-Install dependencies and start development:
+## Run
 
 ```bash
 npm install
 npm run dev
 ```
-
-Open the local URL shown by Next.js.
 
 Optional data generation:
 
@@ -50,12 +48,12 @@ npm run generate:data
 - `src/app/` - App Router pages
 - `src/app/globals.css` - global styles and semantic design utilities
 
-## Portfolio Notes
+## Planned Improvements
 
-- Shows typed API integration in a modern Next.js app.
-- Demonstrates portfolio-friendly UI work around a public API.
-- Useful comparison point with the older custom PHP implementation.
+- Add screenshots or a short GIF of the live UI.
+- Add Lighthouse/performance notes after the next manual audit.
+- Keep the PHP version linked as a comparison point for technical growth.
 
-## Status
+## License
 
-Portfolio-ready Next.js application.
+MIT License. See [LICENSE](./LICENSE).
