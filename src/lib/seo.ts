@@ -42,6 +42,8 @@ function buildTitle(title: string) {
   return `${title} | ${SITE_NAME}`;
 }
 
+const DEFAULT_OG_IMAGE = "/icon.svg";
+
 export function createMetadata({
   title,
   description,
@@ -55,6 +57,7 @@ export function createMetadata({
 }): Metadata {
   const url = buildCanonical(path);
   const fullTitle = buildTitle(title);
+  const imageUrl = getAbsoluteUrl(DEFAULT_OG_IMAGE);
 
   return {
     title,
@@ -69,11 +72,13 @@ export function createMetadata({
       description,
       siteName: SITE_NAME,
       locale: "en_US",
+      images: [{ url: imageUrl, alt: SITE_NAME }],
     },
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
       description,
+      images: [imageUrl],
     },
   };
 }

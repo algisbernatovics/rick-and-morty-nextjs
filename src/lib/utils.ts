@@ -13,7 +13,13 @@ export function formatDate(dateString: string) {
     });
 }
 
-export function getEpisodeIdFromUrl(url: string): number {
+export function getResourceIdFromUrl(url: string): number | null {
     const parts = url.split("/");
-    return parseInt(parts[parts.length - 1]);
+    const id = Number.parseInt(parts[parts.length - 1], 10);
+    return Number.isFinite(id) ? id : null;
+}
+
+/** @deprecated Use getResourceIdFromUrl */
+export function getEpisodeIdFromUrl(url: string): number {
+    return getResourceIdFromUrl(url) ?? 0;
 }

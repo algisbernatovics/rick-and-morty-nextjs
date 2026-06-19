@@ -5,6 +5,7 @@ import { Search, MapPin } from "lucide-react";
 import { LocationCard } from "@/components/LocationCard";
 import Link from "next/link";
 import { buildSearchResultsDescription, createMetadata } from "@/lib/seo";
+import { getSearchName, parsePageParam } from "@/lib/search-params";
 
 interface LocationsProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -12,7 +13,7 @@ interface LocationsProps {
 
 export async function generateMetadata({ searchParams }: LocationsProps): Promise<Metadata> {
     const params = await searchParams;
-    const name = typeof params.name === "string" ? params.name : undefined;
+    const name = getSearchName(params.name);
 
     return createMetadata({
         title: name ? `Rick and Morty Locations Matching ${name}` : "Rick and Morty Locations Guide",
@@ -28,8 +29,8 @@ export async function generateMetadata({ searchParams }: LocationsProps): Promis
 
 export default async function LocationsPage({ searchParams }: LocationsProps) {
     const params = await searchParams;
-    const page = typeof params.page === "string" ? parseInt(params.page) : 1;
-    const name = typeof params.name === "string" ? params.name : undefined;
+    const page = parsePageParam(params.page);
+    const name = getSearchName(params.name);
 
     const searchUrlParams = new URLSearchParams();
     searchUrlParams.set("page", page.toString());
@@ -42,7 +43,7 @@ export default async function LocationsPage({ searchParams }: LocationsProps) {
     if ("error" in result) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-                <h2 className="text-4xl font-black mb-4 text-secondary">LOST IN SPACE!</h2>
+                <h1 className="text-4xl font-black mb-4 text-secondary">LOST IN SPACE!</h1>
                 <p className="text-xl text-muted-foreground mb-8 text-center max-w-md">
                     {result.error.message === "Resource not found"
                         ? "We could not find any Rick and Morty locations matching that search."
@@ -56,6 +57,7 @@ export default async function LocationsPage({ searchParams }: LocationsProps) {
     }
 
     const { results: locations, info } = result;
+    const paginationQuery = name ? { name } : undefined;
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -72,9 +74,13 @@ export default async function LocationsPage({ searchParams }: LocationsProps) {
 
                 <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
                     <form action="/locations" className="relative w-full md:max-w-md">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+                        <label htmlFor="location-search" className="sr-only">
+                            Search locations
+                        </label>
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} aria-hidden />
                         <input
-                            type="text"
+                            id="location-search"
+                            type="search"
                             name="name"
                             defaultValue={name}
                             placeholder="Search locations..."
@@ -98,6 +104,7 @@ export default async function LocationsPage({ searchParams }: LocationsProps) {
                 currentPage={page}
                 totalPages={info.pages}
                 baseUrl="/locations"
+                queryParams={paginationQuery}
             />
         </div>
     );

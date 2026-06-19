@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Menu, X, Users, Tv, MapPin, Info } from "lucide-react";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 const navItems = [
     {
@@ -33,6 +33,8 @@ const navItems = [
 export function Navbar() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
+    const reduceMotion = useReducedMotion();
+    const mobileMenuId = "mobile-navigation-menu";
 
     const checkActive = (item: typeof navItems[0]) => {
         if (item.name === "Characters" && pathname === "/") return true;
@@ -73,7 +75,7 @@ export function Navbar() {
                                         {item.name === "Locations" && <MapPin size={18} className="shrink-0" />}
                                         {item.name === "About" && <Info size={18} className="shrink-0" />}
                                         {item.name}
-                                        {isActive && (
+                                        {isActive && !reduceMotion && (
                                             <motion.div
                                                 layoutId="active-nav"
                                                 className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
@@ -85,6 +87,9 @@ export function Navbar() {
                                                 }}
                                             />
                                         )}
+                                        {isActive && reduceMotion ? (
+                                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+                                        ) : null}
                                     </Link>
                                 );
                             })}
@@ -93,8 +98,12 @@ export function Navbar() {
 
                     <div className="flex md:hidden">
                         <button
+                            type="button"
                             onClick={() => setIsOpen(!isOpen)}
-                            className="text-muted-foreground hover:text-white focus:outline-none"
+                            aria-expanded={isOpen}
+                            aria-controls={mobileMenuId}
+                            aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+                            className="text-muted-foreground hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg p-1"
                         >
                             {isOpen ? <X size={28} /> : <Menu size={28} />}
                         </button>
@@ -105,9 +114,10 @@ export function Navbar() {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
+                        id={mobileMenuId}
+                        initial={reduceMotion ? false : { opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
+                        exit={reduceMotion ? undefined : { opacity: 0, height: 0 }}
                         className="md:hidden glass border-t border-white/10"
                     >
                         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">

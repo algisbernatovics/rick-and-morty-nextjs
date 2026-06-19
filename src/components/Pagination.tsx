@@ -8,12 +8,22 @@ interface PaginationProps {
     currentPage: number;
     totalPages: number;
     baseUrl: string;
+    queryParams?: Record<string, string>;
 }
 
-export function Pagination({ currentPage, totalPages, baseUrl }: PaginationProps) {
+export function Pagination({ currentPage, totalPages, baseUrl, queryParams }: PaginationProps) {
     const getPageUrl = (page: number) => {
         const url = new URL(baseUrl, "http://localhost");
         url.searchParams.set("page", page.toString());
+
+        if (queryParams) {
+            Object.entries(queryParams).forEach(([key, value]) => {
+                if (value) {
+                    url.searchParams.set(key, value);
+                }
+            });
+        }
+
         return url.pathname + url.search;
     };
 
@@ -24,17 +34,28 @@ export function Pagination({ currentPage, totalPages, baseUrl }: PaginationProps
         pages.push(i);
     }
 
+    const prevDisabled = currentPage <= 1;
+    const nextDisabled = currentPage >= totalPages;
+
     return (
-        <div className="flex items-center justify-center space-x-2 my-12">
-            <Link
-                href={currentPage > 1 ? getPageUrl(currentPage - 1) : "#"}
-                className={cn(
-                    "p-2 rounded-lg glass transition-all hover:bg-primary/20",
-                    currentPage <= 1 && "opacity-50 pointer-events-none"
-                )}
-            >
-                <ChevronLeft size={20} />
-            </Link>
+        <nav aria-label="Pagination" className="flex items-center justify-center space-x-2 my-12">
+            {prevDisabled ? (
+                <span
+                    aria-disabled="true"
+                    className="p-2 rounded-lg glass opacity-50"
+                >
+                    <ChevronLeft size={20} aria-hidden />
+                    <span className="sr-only">Previous page</span>
+                </span>
+            ) : (
+                <Link
+                    href={getPageUrl(currentPage - 1)}
+                    aria-label="Previous page"
+                    className="p-2 rounded-lg glass transition-all hover:bg-primary/20"
+                >
+                    <ChevronLeft size={20} aria-hidden />
+                </Link>
+            )}
 
             {pages[0] > 1 && (
                 <>
@@ -49,6 +70,7 @@ export function Pagination({ currentPage, totalPages, baseUrl }: PaginationProps
                 <Link
                     key={page}
                     href={getPageUrl(page)}
+                    aria-current={currentPage === page ? "page" : undefined}
                     className={cn(
                         "w-10 h-10 flex items-center justify-center rounded-lg font-bold transition-all",
                         currentPage === page
@@ -69,15 +91,23 @@ export function Pagination({ currentPage, totalPages, baseUrl }: PaginationProps
                 </>
             )}
 
-            <Link
-                href={currentPage < totalPages ? getPageUrl(currentPage + 1) : "#"}
-                className={cn(
-                    "p-2 rounded-lg glass transition-all hover:bg-primary/20",
-                    currentPage >= totalPages && "opacity-50 pointer-events-none"
-                )}
-            >
-                <ChevronRight size={20} />
-            </Link>
-        </div>
+            {nextDisabled ? (
+                <span
+                    aria-disabled="true"
+                    className="p-2 rounded-lg glass opacity-50"
+                >
+                    <ChevronRight size={20} aria-hidden />
+                    <span className="sr-only">Next page</span>
+                </span>
+            ) : (
+                <Link
+                    href={getPageUrl(currentPage + 1)}
+                    aria-label="Next page"
+                    className="p-2 rounded-lg glass transition-all hover:bg-primary/20"
+                >
+                    <ChevronRight size={20} aria-hidden />
+                </Link>
+            )}
+        </nav>
     );
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { rickAndMortyApi } from "@/lib/api";
-import { getEpisodeIdFromUrl, cn } from "@/lib/utils";
+import { getResourceIdFromUrl, cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, MapPin, Tv } from "lucide-react";
@@ -55,7 +55,9 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
         notFound();
     }
 
-    const episodeIds = character.episode.map(url => getEpisodeIdFromUrl(url));
+    const episodeIds = character.episode
+        .map((url) => getResourceIdFromUrl(url))
+        .filter((id): id is number => id !== null);
     const episodes = await rickAndMortyApi.getMultipleEpisodes(episodeIds);
     const summary = buildCharacterSummary(character);
     const jsonLd = buildCharacterJsonLd(character);
@@ -107,7 +109,7 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
 
                 <div className="md:col-span-2 space-y-12">
                     <section>
-                        <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-4 text-white leading-none">
+                        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter mb-4 text-white leading-tight break-words">
                             {character.name.toUpperCase()}
                         </h1>
                         <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
@@ -133,7 +135,9 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
                             <MapPin className="text-primary shrink-0" size={24} />
                             <div>
                                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Origin</p>
-                                <p className="text-lg font-bold text-white leading-tight">{character.origin.name}</p>
+                                <p className="text-lg font-bold text-white leading-tight">
+                                    <PlaceLink name={character.origin.name} url={character.origin.url} />
+                                </p>
                             </div>
                         </div>
 
@@ -141,7 +145,9 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
                             <MapPin className="text-secondary shrink-0" size={24} />
                             <div>
                                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Last Known Location</p>
-                                <p className="text-lg font-bold text-white leading-tight">{character.location.name}</p>
+                                <p className="text-lg font-bold text-white leading-tight">
+                                    <PlaceLink name={character.location.name} url={character.location.url} />
+                                </p>
                             </div>
                         </div>
                     </section>
@@ -162,4 +168,18 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
             </div>
         </div>
     );
+}
+
+function PlaceLink({ name, url }: { name: string; url: string }) {
+    const id = getResourceIdFromUrl(url);
+
+    if (id) {
+        return (
+            <Link href={`/location/${id}`} className="hover:text-primary transition-colors">
+                {name}
+            </Link>
+        );
+    }
+
+    return <>{name}</>;
 }

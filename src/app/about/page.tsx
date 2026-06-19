@@ -55,7 +55,7 @@ export default function AboutPage() {
                         <h2 className="text-3xl font-black tracking-tight text-white uppercase">Special Thanks</h2>
                     </div>
                     <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                        A huge thanks to the <span className="text-white font-bold">Axel Fuhrmann</span> and the team behind the <Link href="https://rickandmortyapi.com/" target="_blank" className="text-primary hover:underline font-bold">Rick and Morty API</Link>.
+                        A huge thanks to the <span className="text-white font-bold">Axel Fuhrmann</span> and the team behind the <Link href="https://rickandmortyapi.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-bold">Rick and Morty API</Link>.
                         Your amazing work makes this kind of exploration possible across all dimensions.
                     </p>
                 </section>
@@ -76,6 +76,7 @@ export default function AboutPage() {
                         <Link
                             href="https://www.linkedin.com/in/algisbernatovics/"
                             target="_blank"
+                            rel="noopener noreferrer"
                             className="flex items-center gap-3 text-lg text-muted-foreground hover:text-white transition-colors"
                         >
                             <Linkedin className="text-secondary shrink-0" size={22} />
@@ -84,6 +85,7 @@ export default function AboutPage() {
                         <Link
                             href="https://github.com/algisbernatovics/rick-and-morty-njs"
                             target="_blank"
+                            rel="noopener noreferrer"
                             className="flex items-center gap-3 text-lg text-muted-foreground hover:text-white transition-colors"
                         >
                             <Github className="text-accent shrink-0" size={22} />
@@ -92,6 +94,7 @@ export default function AboutPage() {
                         <Link
                             href="https://github.com/algisbernatovics/rick-and-morty"
                             target="_blank"
+                            rel="noopener noreferrer"
                             className="flex items-center gap-3 text-lg text-muted-foreground hover:text-white transition-colors"
                         >
                             <Github className="text-accent shrink-0" size={22} />
