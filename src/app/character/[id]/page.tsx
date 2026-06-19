@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, MapPin, Tv } from "lucide-react";
 import { EpisodeRow } from "@/components/EpisodeRow";
+import { ShowMoreList } from "@/components/ShowMoreList";
 import { buildCharacterJsonLd, buildCharacterSummary, createMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getCharacterById, getCharacterIds, getEpisodesByIds } from "@/lib/static-data";
@@ -85,7 +86,7 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
                 <div className="md:col-span-1">
-                    <div className="sticky top-32">
+                    <div>
                         <div className="relative aspect-square overflow-hidden rounded-3xl border-2 border-primary/20 shadow-[var(--shadow-primary)]">
                             <Image
                                 src={character.image}
@@ -103,9 +104,9 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
                     </div>
                 </div>
 
-                <div className="md:col-span-2 space-y-12">
+                <div className="md:col-span-2 space-y-8">
                     <section>
-                        <h1 className="mb-4 text-6xl font-black leading-none tracking-tighter text-text-strong md:text-8xl">
+                        <h1 className="mb-4 text-5xl font-black leading-none tracking-tighter text-text-strong md:text-6xl">
                             {character.name.toUpperCase()}
                         </h1>
                         <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
@@ -168,11 +169,16 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
                             <h2 className="text-2xl font-black uppercase tracking-tight text-text-strong">Rick and Morty Episodes Featuring {character.name}</h2>
                         </div>
 
-                        <div className="grid grid-cols-1 gap-3">
+                        <ShowMoreList
+                            initialCount={12}
+                            step={12}
+                            itemLabel="episodes"
+                            className="grid grid-cols-1 gap-3"
+                        >
                             {episodes.map((episode) => (
                                 <EpisodeRow key={episode.id} episode={episode} />
                             ))}
-                        </div>
+                        </ShowMoreList>
                     </section>
                 </div>
             </div>

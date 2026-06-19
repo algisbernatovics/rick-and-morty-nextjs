@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import { getCharactersByIds, getEpisodeById, getEpisodeIds, getLocationById } from "@/lib/static-data";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Panel } from "@/components/ui/Panel";
+import { ShowMoreList } from "@/components/ShowMoreList";
 
 interface EpisodePageProps {
     params: Promise<{ id: string }>;
@@ -93,11 +94,11 @@ export default async function EpisodePage({ params }: EpisodePageProps) {
                 BACK TO ALL EPISODES
             </Link>
 
-            <header className="mb-16 text-center">
+            <header className="mb-10 text-center">
                 <p className="text-primary font-black tracking-[0.3em] uppercase mb-4 animate-fade-in group">
                     {formatEpisodeCode(episode.episode)}
                 </p>
-                <h1 className="mb-8 text-5xl font-black uppercase leading-none tracking-tighter text-text-strong md:text-8xl">
+                <h1 className="mb-6 text-4xl font-black uppercase leading-none tracking-tighter text-text-strong md:text-6xl">
                     {episode.name}
                 </h1>
                 <p className="max-w-3xl mx-auto text-lg text-muted-foreground leading-relaxed mb-8">
@@ -183,11 +184,16 @@ export default async function EpisodePage({ params }: EpisodePageProps) {
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <ShowMoreList
+                    initialCount={16}
+                    step={16}
+                    itemLabel="characters"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                >
                     {characters.map((character) => (
                         <CharacterCard key={character.id} character={character} />
                     ))}
-                </div>
+                </ShowMoreList>
             </section>
         </div>
     );
