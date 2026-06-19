@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Github, ExternalLink, Heart, Mail, Linkedin, Code2, RefreshCw } from "lucide-react";
+import { Github, ExternalLink, Mail, Linkedin, Code2, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { createMetadata } from "@/lib/seo";
+import { getAllCharacters, getAllEpisodes, getAllLocations, getSnapshotGeneratedAt } from "@/lib/static-data";
 
 export const metadata: Metadata = createMetadata({
     title: "About Rick and Morty Explorer",
@@ -11,64 +12,107 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default function AboutPage() {
+    const stats = [
+        { label: "Characters", value: getAllCharacters().length.toLocaleString(), tone: "text-primary", href: "/" },
+        { label: "Episodes", value: getAllEpisodes().length.toLocaleString(), tone: "text-secondary", href: "/episodes" },
+        { label: "Locations", value: getAllLocations().length.toLocaleString(), tone: "text-accent", href: "/locations" },
+    ];
+    const snapshotDate = new Intl.DateTimeFormat("en", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+    }).format(new Date(getSnapshotGeneratedAt()));
+
     return (
-        <div className="max-w-4xl mx-auto px-4 py-16">
-            <header className="mb-16 text-center">
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white mb-6 uppercase">
-                    About the <span className="text-primary">Guide</span>
+        <div className="mx-auto max-w-6xl px-4 py-16">
+            <header className="mb-14 text-center">
+                <p className="mb-4 text-sm font-black uppercase tracking-[0.3em] text-secondary">
+                    Static Rick and Morty guide
+                </p>
+                <h1 className="text-balance mb-6 text-5xl font-black uppercase tracking-tighter text-text-strong md:text-7xl">
+                    Built for fast browsing and crawlable SEO
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-medium">
-                    Rick and Morty Explorer is an English-language fan project for browsing characters, episodes, and locations from the series with fast search, linked detail pages, and a production-ready Next.js stack.
+                <p className="mx-auto max-w-3xl text-xl font-medium leading-8 text-muted-foreground">
+                    Rick and Morty Explorer is a fan-made, English-language guide that turns the public API into static{" "}
+                    <Link href="/" className="focus-ring rounded font-bold text-primary hover:underline">character</Link>,{" "}
+                    <Link href="/episodes" className="focus-ring rounded font-bold text-secondary hover:underline">episode</Link>, and{" "}
+                    <Link href="/locations" className="focus-ring rounded font-bold text-accent hover:underline">location</Link> pages with internal links, structured data, and a persistent sitemap.
                 </p>
             </header>
 
-            <div className="grid grid-cols-1 gap-8">
-                <section className="glass p-8 md:p-12 rounded-3xl border-l-4 border-primary">
-                    <div className="flex items-center gap-4 mb-6">
-                        <Code2 className="text-primary" size={32} />
-                        <h2 className="text-3xl font-black tracking-tight text-white uppercase">Project Background</h2>
+            <section className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3" aria-label="Static export coverage">
+                {stats.map((stat) => (
+                    <Link
+                        key={stat.label}
+                        href={stat.href}
+                        className="panel panel-interactive focus-ring rounded-3xl p-6 text-center"
+                    >
+                        <p className={`text-4xl font-black tracking-tighter ${stat.tone}`}>{stat.value}</p>
+                        <p className="eyebrow mt-2">{stat.label} exported</p>
+                    </Link>
+                ))}
+            </section>
+
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                <section className="panel rounded-3xl border-l-4 border-l-primary p-8 md:p-10">
+                    <div className="mb-6 flex items-center gap-4">
+                        <Code2 className="text-primary" size={32} aria-hidden="true" />
+                        <h2 className="text-3xl font-black uppercase tracking-tight text-text-strong">Project background</h2>
                     </div>
-                    <p className="text-lg text-muted-foreground mb-4 leading-relaxed">
-                        Built by <span className="text-white font-bold">Algis Bernatovics</span>, this project is a rewrite of my earlier Rick and Morty coursework app from Codelex, where I started as a PHP developer.
+                    <p className="mb-4 text-lg leading-relaxed text-muted-foreground">
+                        Built by <span className="font-bold text-text-strong">Algis Bernatovics</span>, this project is a rewrite of an earlier Rick and Morty coursework app from Codelex, where the idea started in PHP.
                     </p>
-                    <p className="text-lg text-muted-foreground leading-relaxed">
-                        The original PHP version began on May 7, 2023 and is publicly available on GitHub. This Next.js version rebuilds the same idea with a stronger frontend architecture, cleaner routing, better SEO, and a more polished user experience.
+                    <p className="text-lg leading-relaxed text-muted-foreground">
+                        The modern version keeps the same exploration idea but rebuilds it with Next.js, TypeScript, reusable UI primitives, static export, and cleaner SEO foundations.
                     </p>
                 </section>
 
-                <section className="glass p-8 md:p-12 rounded-3xl border-l-4 border-primary">
-                    <div className="flex items-center gap-4 mb-6">
-                        <RefreshCw className="text-primary" size={32} />
-                        <h2 className="text-3xl font-black tracking-tight text-white uppercase">What Changed in the Rewrite</h2>
+                <section className="panel rounded-3xl border-l-4 border-l-secondary p-8 md:p-10">
+                    <div className="mb-6 flex items-center gap-4">
+                        <RefreshCw className="text-secondary" size={32} aria-hidden="true" />
+                        <h2 className="text-3xl font-black uppercase tracking-tight text-text-strong">How data updates</h2>
                     </div>
-                    <p className="text-lg text-muted-foreground mb-4 leading-relaxed">
-                        This rewrite moves the project from a PHP coursework foundation to a modern Next.js and TypeScript application with App Router, reusable components, responsive layouts, and a cleaner deployment workflow.
+                    <p className="mb-4 text-lg leading-relaxed text-muted-foreground">
+                        The app refreshes a build-time snapshot from the Rick and Morty API, then generates static pages from that data. If the API throttles during deploy, the last committed snapshot keeps the build working.
                     </p>
-                    <p className="text-lg text-muted-foreground leading-relaxed">
-                        It also adds route metadata, structured SEO improvements, sitemap and robots support, and Google Analytics integration while keeping the Rick and Morty API as the core data source.
-                    </p>
-                </section>
-
-                <section className="glass p-8 md:p-12 rounded-3xl border-l-4 border-secondary">
-                    <div className="flex items-center gap-4 mb-6">
-                        <Heart className="text-secondary" size={32} />
-                        <h2 className="text-3xl font-black tracking-tight text-white uppercase">Special Thanks</h2>
-                    </div>
-                    <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                        A huge thanks to the <span className="text-white font-bold">Axel Fuhrmann</span> and the team behind the <Link href="https://rickandmortyapi.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-bold">Rick and Morty API</Link>.
-                        Your amazing work makes this kind of exploration possible across all dimensions.
+                    <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
+                        Current snapshot: <span className="text-text-strong">{snapshotDate}</span>
                     </p>
                 </section>
 
-                <section className="glass p-8 md:p-12 rounded-3xl border-l-4 border-accent">
-                    <div className="flex items-center gap-4 mb-6">
-                        <ExternalLink className="text-accent" size={32} />
-                        <h2 className="text-3xl font-black tracking-tight text-white uppercase">Contacts</h2>
+                <section className="panel rounded-3xl border-l-4 border-l-accent p-8 md:p-10">
+                    <div className="mb-6 flex items-center gap-4">
+                        <ShieldCheck className="text-accent" size={32} aria-hidden="true" />
+                        <h2 className="text-3xl font-black uppercase tracking-tight text-text-strong">SEO and UX focus</h2>
                     </div>
-                    <div className="space-y-4 mb-8">
+                    <ul className="space-y-3 text-lg leading-relaxed text-muted-foreground">
+                        <li className="flex gap-3">
+                            <Sparkles className="mt-1 shrink-0 text-primary" size={20} aria-hidden="true" />
+                            Crawlable static URLs for listing pages and entity detail pages.
+                        </li>
+                        <li className="flex gap-3">
+                            <Sparkles className="mt-1 shrink-0 text-secondary" size={20} aria-hidden="true" />
+                            Route metadata, structured data, robots output, and a complete sitemap.
+                        </li>
+                        <li className="flex gap-3">
+                            <Sparkles className="mt-1 shrink-0 text-accent" size={20} aria-hidden="true" />
+                            Accessible navigation, pagination, focus states, and reduced-motion support.
+                        </li>
+                    </ul>
+                </section>
+
+                <section className="panel rounded-3xl border-l-4 border-l-primary p-8 md:p-10">
+                    <div className="mb-6 flex items-center gap-4">
+                        <ExternalLink className="text-primary" size={32} aria-hidden="true" />
+                        <h2 className="text-3xl font-black uppercase tracking-tight text-text-strong">Credits and contact</h2>
+                    </div>
+                    <p className="mb-6 text-lg leading-relaxed text-muted-foreground">
+                        Thanks to <span className="font-bold text-text-strong">Axel Fuhrmann</span> and the team behind the <Link href="https://rickandmortyapi.com/" target="_blank" rel="noopener noreferrer" className="focus-ring rounded font-bold text-primary hover:underline">Rick and Morty API</Link> for making this kind of fan guide possible.
+                    </p>
+                    <div className="mb-8 space-y-4">
                         <Link
                             href="mailto:algis.bernatovics@gmail.com"
-                            className="flex items-center gap-3 text-lg text-muted-foreground hover:text-white transition-colors"
+                            className="focus-ring flex items-center gap-3 rounded text-lg text-muted-foreground transition-colors hover:text-text-strong"
                         >
                             <Mail className="text-primary shrink-0" size={22} />
                             algis.bernatovics@gmail.com
@@ -77,7 +121,7 @@ export default function AboutPage() {
                             href="https://www.linkedin.com/in/algisbernatovics/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-3 text-lg text-muted-foreground hover:text-white transition-colors"
+                            className="focus-ring flex items-center gap-3 rounded text-lg text-muted-foreground transition-colors hover:text-text-strong"
                         >
                             <Linkedin className="text-secondary shrink-0" size={22} />
                             linkedin.com/in/algisbernatovics
@@ -86,7 +130,7 @@ export default function AboutPage() {
                             href="https://github.com/algisbernatovics/rick-and-morty-njs"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-3 text-lg text-muted-foreground hover:text-white transition-colors"
+                            className="focus-ring flex items-center gap-3 rounded text-lg text-muted-foreground transition-colors hover:text-text-strong"
                         >
                             <Github className="text-accent shrink-0" size={22} />
                             Next.js repository
@@ -95,14 +139,14 @@ export default function AboutPage() {
                             href="https://github.com/algisbernatovics/rick-and-morty"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-3 text-lg text-muted-foreground hover:text-white transition-colors"
+                            className="focus-ring flex items-center gap-3 rounded text-lg text-muted-foreground transition-colors hover:text-text-strong"
                         >
                             <Github className="text-accent shrink-0" size={22} />
                             PHP repository
                         </Link>
                     </div>
-                    <p className="text-lg text-muted-foreground leading-relaxed">
-                        This application is deployed on <span className="text-white font-bold">Vercel</span>. It is an unofficial fan project and is not affiliated with Adult Swim or the official Rick and Morty brand.
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                        This application is deployed on <span className="font-bold text-text-strong">Vercel</span>. It is an unofficial fan project and is not affiliated with Adult Swim or the official Rick and Morty brand.
                     </p>
                 </section>
             </div>

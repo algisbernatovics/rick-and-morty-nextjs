@@ -6,7 +6,7 @@ async function apiRequest<T>(endpoint: string, options?: RequestInit): Promise<T
     const url = endpoint.startsWith("http") ? endpoint : `${BASE_URL}/${endpoint}`;
     const response = await fetch(url, {
         ...options,
-        next: { revalidate: 3600 },
+        cache: options?.cache ?? "force-cache",
     });
 
     if (!response.ok) {

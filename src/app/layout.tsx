@@ -3,11 +3,14 @@ import { Inter, Outfit } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { getMetadataBase, getSiteDescription, getSiteName } from "@/lib/seo";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
-const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+const rawGaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+const gaMeasurementId =
+  rawGaMeasurementId && /^G-[A-Z0-9]+$/.test(rawGaMeasurementId) ? rawGaMeasurementId : undefined;
 
 export const metadata: Metadata = {
   metadataBase: getMetadataBase(),
@@ -58,7 +61,7 @@ export default function RootLayout({
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${gaMeasurementId}');
+                gtag('config', ${JSON.stringify(gaMeasurementId)});
               `}
             </Script>
           </>
@@ -73,11 +76,7 @@ export default function RootLayout({
         <main id="main-content" className="min-h-screen bg-background">
           {children}
         </main>
-        <footer className="py-10 border-t border-white/10 glass text-center">
-          <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} Rick and Morty Explorer. Data provided by the <a href="https://rickandmortyapi.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Rick and Morty API</a>.
-          </p>
-        </footer>
+        <Footer />
       </body>
     </html>
   );

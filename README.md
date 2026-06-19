@@ -1,77 +1,59 @@
-# Rick and Morty Multi-Dimensional Explorer
+# Rick and Morty Next.js
 
-A premium, modern web application built with **Next.js 15**, **TypeScript**, and **Tailwind CSS**. This project is a complete rewrite and enhancement of the original PHP-based Rick and Morty explorer.
+A TypeScript Next.js explorer for Rick and Morty characters, locations, and episodes.
 
-## 🚀 Features
+Live demo: [rickmorty-hub.vercel.app](https://rickmorty-hub.vercel.app)
 
-- **Characters Explorer**: Browse and search through the entire database of Rick and Morty characters.
-- **Episodes & Locations**: Detailed listing of all episodes and locations with advanced search.
-- **Deep Interconnectivity**:
-    - View characters featured in a specific episode.
-    - View residents of any location.
-    - Discover which episodes a character appeared in.
-- **Premium UI/UX**:
-    - **Glassmorphism Design**: High-end aesthetic with frosted glass effects and vibrant accents.
-    - **Smooth Animations**: Powered by Framer Motion for a fluid, reactive feel.
-    - **Responsive Layout**: Fully optimized for mobile, tablet, and desktop screens.
-- **Performance Optimized**:
-    - **Server-Side Rendering (SSR)**: Fast initial loads and great SEO.
-    - **Optimized Images**: Using `next/image` for automatic resizing and lazy loading.
-    - **Smart Caching**: API responses are cached to minimize network requests.
-- **Error Handling**: Graceful "Dimensional Glitch" error states and search fallback UIs.
+## Overview
 
-## 🛠️ Tech Stack
+Rick and Morty Next.js is a modern App Router project built around [The Rick and Morty API](https://rickandmortyapi.com/). It provides typed API helpers, reusable UI styling, data-generation support, and a polished public demo.
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **API**: [The Rick and Morty API](https://rickandmortyapi.com/)
+## Features
 
-## 🏁 Getting Started
+- Fetches characters, locations, and episodes from the public Rick and Morty API.
+- Uses typed API helpers and shared TypeScript models.
+- Includes static data generation scripts for optimized data access.
+- Modern App Router structure with Tailwind CSS styling.
+- Uses shared design utilities such as `panel`, `panel-interactive`, `focus-ring`, and `eyebrow` from `src/app/globals.css`.
+- Includes animation/icon dependencies for richer UI polish.
 
-### Prerequisites
+## Tech Stack
 
-- Node.js 18.x or later
-- npm, yarn, or pnpm
+- Next.js 15 App Router
+- React
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Lucide React
+- Rick and Morty API
 
-### Installation
-
-1. Clone the repository (if applicable).
-2. Navigate to the project directory:
-   ```bash
-   cd rickmorty-njs
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-### Running the Development Server
+## Run
 
 ```bash
+npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-### Building for Production
+Optional data generation:
 
 ```bash
-npm run build
-npm run start
+npm run generate:data
 ```
 
-## 📂 Project Structure
+## Project Structure
 
-- `src/app/`: Next.js App Router pages and layouts.
-- `src/components/`: Reusable React components (Navbar, CharacterCard, Pagination, etc.).
-- `src/lib/`: Unified API client and utility functions.
-- `src/types/`: Centralized TypeScript interfaces.
-- `src/hooks/`: Custom React hooks (if any).
+- `src/lib/api.ts` - typed API client
+- `src/types/` - shared TypeScript types
+- `scripts/generate-rick-and-morty-data.mjs` - data generation helper
+- `src/app/` - App Router pages
+- `src/app/globals.css` - global styles and semantic design utilities
 
----
+## Planned Improvements
 
-*Wubba Lubba Dub Dub!* 🛸✨
+- Add screenshots or a short GIF of the live UI.
+- Add Lighthouse/performance notes after the next manual audit.
+- Keep the PHP version linked as a comparison point for technical growth.
 
+## License
+
+MIT License. See [LICENSE](./LICENSE).

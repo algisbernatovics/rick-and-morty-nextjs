@@ -1,22 +1,43 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { MapPin, Tv, Users } from "lucide-react";
 import { StaticEntityIndex } from "@/components/StaticEntityIndex";
 import { createMetadata } from "@/lib/seo";
-import { getAllCharacters, paginateItems } from "@/lib/static-data";
+import { getAllCharacters, getPaginatedCharacterParams, paginateItems } from "@/lib/static-data";
 import { ExploreLinks } from "@/components/ExploreLinks";
 
+interface CharacterIndexPageProps {
+  params: Promise<{ page: string }>;
+}
+
 export const dynamic = "force-static";
+export const dynamicParams = false;
 
-export const metadata: Metadata = createMetadata({
-  title: "Rick and Morty Characters Guide",
-  description:
-    "Browse a searchable Rick and Morty character guide with names, species, status, origin, and linked episode appearances.",
-  path: "/",
-});
+export function generateStaticParams() {
+  return getPaginatedCharacterParams();
+}
 
-export default function Home() {
+export async function generateMetadata({ params }: CharacterIndexPageProps): Promise<Metadata> {
+  const { page } = await params;
+  const pageNumber = Number.parseInt(page, 10);
+
+  return createMetadata({
+    title: `Rick and Morty Characters Guide - Page ${pageNumber}`,
+    description:
+      "Continue browsing the static Rick and Morty character guide with crawlable pages for every character profile.",
+    path: `/characters/page/${pageNumber}`,
+  });
+}
+
+export default async function CharacterIndexPage({ params }: CharacterIndexPageProps) {
+  const { page } = await params;
+  const pageNumber = Number.parseInt(page, 10);
   const characters = getAllCharacters();
-  const paginatedCharacters = paginateItems(characters, 1);
+  const paginatedCharacters = paginateItems(characters, pageNumber);
+
+  if (Number.isNaN(pageNumber) || pageNumber < 2 || pageNumber > paginatedCharacters.totalPages) {
+    notFound();
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -28,7 +49,7 @@ export default function Home() {
           </h1>
         </div>
         <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
-          Explore a searchable Rick and Morty character index with names, species, status, origin details, and links to every character page and episode appearance in the multiverse.
+          Continue exploring the static Rick and Morty character index with names, species, status, origin details, and links to every character page and episode appearance.
         </p>
         <ExploreLinks
           links={[

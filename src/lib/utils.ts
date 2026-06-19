@@ -13,13 +13,16 @@ export function formatDate(dateString: string) {
     });
 }
 
-export function getResourceIdFromUrl(url: string): number | null {
+export function getIdFromUrl(url: string): number {
     const parts = url.split("/");
-    const id = Number.parseInt(parts[parts.length - 1], 10);
-    return Number.isFinite(id) ? id : null;
+    return parseInt(parts[parts.length - 1]);
 }
 
-/** @deprecated Use getResourceIdFromUrl */
-export function getEpisodeIdFromUrl(url: string): number {
-    return getResourceIdFromUrl(url) ?? 0;
+export function getEntityHrefFromApiUrl(url: string, routeSegment: string) {
+    if (!url) return undefined;
+
+    const id = getIdFromUrl(url);
+    return Number.isFinite(id) ? `/${routeSegment}/${id}` : undefined;
 }
+
+export const getEpisodeIdFromUrl = getIdFromUrl;

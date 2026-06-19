@@ -1,30 +1,29 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { Character } from "@/types";
-import { motion, useReducedMotion } from "framer-motion";
+import { StatusBadge } from "@/components/ui/StatusBadge";
+import { getEntityHrefFromApiUrl } from "@/lib/utils";
 
 interface CharacterCardProps {
     character: Character;
 }
 
 export function CharacterCard({ character }: CharacterCardProps) {
-    const reduceMotion = useReducedMotion();
+    const characterHref = `/character/${character.id}`;
+    const currentLocationHref = getEntityHrefFromApiUrl(character.location.url, "location");
+    const originHref = getEntityHrefFromApiUrl(character.origin.url, "location");
 
     return (
-        <motion.div
-            whileHover={reduceMotion ? undefined : { y: -5 }}
-            transition={{ type: "spring", stiffness: 300 }}
-            className="group relative flex flex-col overflow-hidden rounded-2xl bg-card border border-white/5 shadow-xl transition-all hover:border-primary/50"
+        <article
+            className="panel panel-interactive focus-ring group relative flex h-full flex-col overflow-hidden rounded-2xl"
         >
-            <Link
-                href={`/character/${character.id}`}
-                className="flex flex-1 flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                aria-label={`View ${character.name} character details`}
-            >
-                <div className="p-4">
-                    <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-white/10 bg-white/5 p-1">
+            <div className="p-4">
+                <Link
+                    href={characterHref}
+                    aria-label={`View ${character.name} character guide`}
+                    className="focus-ring block rounded-xl"
+                >
+                    <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-border-subtle bg-surface-hover p-1">
                         <div className="h-full w-full overflow-hidden rounded-lg">
                             <Image
                                 src={character.image}
@@ -32,51 +31,67 @@ export function CharacterCard({ character }: CharacterCardProps) {
                                 width={400}
                                 height={400}
                                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                             />
                         </div>
                     </div>
+                </Link>
+            </div>
+
+            <div className="flex flex-1 flex-col p-5">
+                <div className="mb-3 flex items-center gap-2">
+                    <StatusBadge status={character.status} />
+                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        {character.species}
+                    </span>
                 </div>
 
-                <div className="flex flex-1 flex-col p-5">
-                    <div className="flex items-center gap-2 mb-2">
-                        <div
-                            className={`h-2.5 w-2.5 rounded-full ${character.status === 'Alive' ? 'bg-green-500' :
-                                character.status === 'Dead' ? 'bg-red-500' : 'bg-gray-500'
-                                } shadow-[0_0_8px_rgba(0,0,0,0.5)]`}
-                            aria-hidden
-                        />
-                        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                            {character.status} — {character.species}
-                        </span>
-                    </div>
-
-                    <h3 className="text-xl font-black text-white group-hover:text-primary transition-colors line-clamp-1 mb-4">
+                <Link href={characterHref} className="focus-ring mb-4 rounded">
+                    <h3 className="line-clamp-1 text-xl font-black text-text-strong transition-colors group-hover:text-primary">
                         {character.name}
                     </h3>
+                </Link>
 
-                    <div className="space-y-4">
-                        <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Last known location:</p>
-                            <p className="text-sm font-medium text-gray-200 group-hover:text-secondary transition-colors line-clamp-1">
+                <div className="space-y-4">
+                    <div>
+                        <p className="eyebrow">Last known location</p>
+                        {currentLocationHref ? (
+                            <Link
+                                href={currentLocationHref}
+                                className="focus-ring line-clamp-1 rounded text-sm font-medium text-text-soft transition-colors hover:text-secondary"
+                            >
+                                {character.location.name}
+                            </Link>
+                        ) : (
+                            <p className="line-clamp-1 text-sm font-medium text-text-soft">
                                 {character.location.name}
                             </p>
-                        </div>
+                        )}
+                    </div>
 
-                        <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">First seen in:</p>
-                            <p className="text-sm font-medium text-gray-200 line-clamp-1">
+                    <div>
+                        <p className="eyebrow">Origin</p>
+                        {originHref ? (
+                            <Link
+                                href={originHref}
+                                className="focus-ring line-clamp-1 rounded text-sm font-medium text-text-soft transition-colors hover:text-secondary"
+                            >
+                                {character.origin.name}
+                            </Link>
+                        ) : (
+                            <p className="line-clamp-1 text-sm font-medium text-text-soft">
                                 {character.origin.name}
                             </p>
-                        </div>
+                        )}
                     </div>
                 </div>
-            </Link>
+            </div>
 
-            <div className="absolute top-4 right-4 z-20 pointer-events-none">
-                <span className="px-2 py-1 rounded bg-black/60 backdrop-blur-md text-[10px] font-bold text-white border border-white/10 uppercase">
+            <div className="absolute right-4 top-4">
+                <span className="rounded border border-border-subtle bg-background/70 px-2 py-1 text-[10px] font-bold uppercase text-text-strong backdrop-blur-md">
                     #{character.id}
                 </span>
             </div>
-        </motion.div>
+        </article>
     );
 }
