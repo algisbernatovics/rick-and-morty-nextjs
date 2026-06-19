@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Episode } from "@/types";
+import { formatDate } from "@/lib/utils";
 
 interface EpisodeRowProps {
     episode: Episode;
@@ -19,10 +20,13 @@ export function EpisodeRow({ episode }: EpisodeRowProps) {
                 <h3 className="text-lg font-bold text-text-strong transition-colors group-hover:text-secondary">
                     {episode.name}
                 </h3>
+                <p className="mt-1 text-xs text-muted-foreground sm:hidden">
+                    {formatDate(episode.air_date)}
+                </p>
             </div>
             <div className="hidden text-right sm:block">
                 <p className="eyebrow">Air Date</p>
-                <p className="text-sm font-medium text-text-soft">{episode.air_date}</p>
+                <p className="text-sm font-medium text-text-soft">{formatDate(episode.air_date)}</p>
             </div>
         </Link>
     );

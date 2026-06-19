@@ -32,11 +32,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     title: getSiteName(),
     description: getSiteDescription(),
+    images: [{ url: "/icon.svg", alt: getSiteName() }],
   },
   twitter: {
     card: "summary_large_image",
     title: getSiteName(),
     description: getSiteDescription(),
+    images: ["/icon.svg"],
   },
 };
 
@@ -64,8 +66,14 @@ export default function RootLayout({
             </Script>
           </>
         ) : null}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-black"
+        >
+          Skip to content
+        </a>
         <Navbar />
-        <main className="min-h-screen bg-background">
+        <main id="main-content" className="min-h-screen bg-background">
           {children}
         </main>
         <Footer />

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Tv } from "lucide-react";
 import { Episode } from "@/types";
+import { formatDate } from "@/lib/utils";
 
 interface EpisodeCardProps {
     episode: Episode;
@@ -27,7 +28,7 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
             <div className="mt-auto space-y-4 border-t border-border-subtle pt-4">
                 <div>
                     <p className="eyebrow">Original Air Date</p>
-                    <p className="font-bold text-text-soft">{episode.air_date}</p>
+                    <p className="font-bold text-text-soft">{formatDate(episode.air_date)}</p>
                 </div>
                 <div>
                     <p className="eyebrow">Characters Featured</p>
