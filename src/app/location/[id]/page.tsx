@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import { getAllLocations, getCharactersByIds, getLocationById, getLocationIds } from "@/lib/static-data";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Panel } from "@/components/ui/Panel";
+import { ShowMoreList } from "@/components/ShowMoreList";
 
 interface LocationPageProps {
     params: Promise<{ id: string }>;
@@ -85,11 +86,11 @@ export default async function LocationPage({ params }: LocationPageProps) {
                 BACK TO ALL LOCATIONS
             </Link>
 
-            <header className="mb-16 text-center">
+            <header className="mb-10 text-center">
                 <p className="text-secondary font-black tracking-[0.3em] uppercase mb-4 animate-fade-in group">
                     {location.type} • {location.dimension}
                 </p>
-                <h1 className="mb-8 bg-gradient-to-r from-secondary to-primary bg-clip-text text-5xl font-black uppercase leading-none tracking-tighter text-transparent md:text-8xl">
+                <h1 className="mb-6 bg-gradient-to-r from-secondary to-primary bg-clip-text text-4xl font-black uppercase leading-none tracking-tighter text-transparent md:text-6xl">
                     {location.name}
                 </h1>
                 <p className="max-w-3xl mx-auto text-lg text-muted-foreground leading-relaxed mb-8">
@@ -123,11 +124,16 @@ export default async function LocationPage({ params }: LocationPageProps) {
                 </div>
 
                 {characters.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <ShowMoreList
+                        initialCount={12}
+                        step={12}
+                        itemLabel="residents"
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                    >
                         {characters.map((character) => (
                             <CharacterCard key={character.id} character={character} />
                         ))}
-                    </div>
+                    </ShowMoreList>
                 ) : (
                     <Panel className="rounded-3xl border-2 border-dashed border-border-subtle p-12 text-center">
                         <p className="text-2xl font-black text-muted-foreground uppercase tracking-tighter">
