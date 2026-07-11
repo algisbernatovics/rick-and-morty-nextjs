@@ -7,12 +7,14 @@ import { CharacterCard } from "@/components/CharacterCard";
 import { EpisodeCard } from "@/components/EpisodeCard";
 import { LocationCard } from "@/components/LocationCard";
 import { Pagination } from "@/components/Pagination";
+import { searchByName } from "@/lib/search";
 
 type EntityType = "characters" | "episodes" | "locations";
 type EntityItem = Character | Episode | LocationData;
 
 interface StaticEntityIndexProps {
   entityType: EntityType;
+  catalog: EntityItem[];
   initialItems: EntityItem[];
   currentPage: number;
   totalPages: number;
@@ -26,21 +28,23 @@ interface StaticEntityIndexProps {
 
 const entityConfig = {
   characters: {
-    endpoint: "character",
     accentClass: "focus:ring-primary/50",
   },
   episodes: {
-    endpoint: "episode",
     accentClass: "focus:ring-primary/50",
   },
   locations: {
-    endpoint: "location",
     accentClass: "focus:ring-secondary/50",
   },
-} satisfies Record<EntityType, { endpoint: string; accentClass: string }>;
+} satisfies Record<EntityType, { accentClass: string }>;
+
+function runLocalSearch(catalog: EntityItem[], query: string, page: number): APIResponse<EntityItem> {
+  return searchByName(catalog, query, page);
+}
 
 export function StaticEntityIndex({
   entityType,
+  catalog,
   initialItems,
   currentPage,
   totalPages,
@@ -54,8 +58,6 @@ export function StaticEntityIndex({
   const [query, setQuery] = useState("");
   const [searchPage, setSearchPage] = useState(1);
   const [searchResult, setSearchResult] = useState<APIResponse<EntityItem> | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const searchInputId = useId();
 
   const trimmedQuery = query.trim();
@@ -71,55 +73,26 @@ export function StaticEntityIndex({
     return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
   }, [entityType]);
 
-  async function runSearch(page = 1) {
+  function runSearch(page = 1) {
     if (!trimmedQuery) {
       setSearchResult(null);
-      setError(null);
       setSearchPage(1);
       return;
     }
 
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const params = new URLSearchParams({ page: String(page), name: trimmedQuery });
-      const response = await fetch(
-        `https://rickandmortyapi.com/api/${entityConfig[entityType].endpoint}/?${params.toString()}`
-      );
-
-      if (response.status === 404) {
-        setSearchResult({
-          info: { count: 0, pages: 1, next: null, prev: null },
-          results: [],
-        });
-        setSearchPage(1);
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error("Search failed. Please try again later.");
-      }
-
-      const result = (await response.json()) as APIResponse<EntityItem>;
-      setSearchResult(result);
-      setSearchPage(page);
-    } catch (searchError) {
-      setError(searchError instanceof Error ? searchError.message : "Search failed. Please try again later.");
-    } finally {
-      setIsLoading(false);
-    }
+    const result = runLocalSearch(catalog, trimmedQuery, page);
+    setSearchResult(result);
+    setSearchPage(page);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    void runSearch(1);
+    runSearch(1);
   }
 
   function clearSearch() {
     setQuery("");
     setSearchResult(null);
-    setError(null);
     setSearchPage(1);
   }
 
@@ -161,18 +134,6 @@ export function StaticEntityIndex({
         </div>
       </div>
 
-      {error ? (
-        <div className="panel mb-8 rounded-3xl p-8 text-center font-bold text-status-dead" role="alert">
-          {error}
-        </div>
-      ) : null}
-
-      {isLoading ? (
-        <div className="panel mb-8 rounded-3xl p-8 text-center font-bold uppercase tracking-widest text-muted-foreground" role="status" aria-live="polite">
-          Searching the multiverse...
-        </div>
-      ) : null}
-
       <p className="sr-only" role="status" aria-live="polite">
         Showing {items.length} {entityType} on this page.
       </p>
@@ -191,8 +152,7 @@ export function StaticEntityIndex({
         <SearchPagination
           currentPage={searchPage}
           totalPages={activeSearchResult.info.pages}
-          onPageChange={(page) => void runSearch(page)}
-          isLoading={isLoading}
+          onPageChange={runSearch}
         />
       ) : (
         <Pagination
@@ -228,12 +188,10 @@ function SearchPagination({
   currentPage,
   totalPages,
   onPageChange,
-  isLoading,
 }: {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  isLoading: boolean;
 }) {
   if (totalPages <= 1) return null;
 
@@ -241,7 +199,7 @@ function SearchPagination({
     <div className="flex items-center justify-center gap-3 my-12">
       <button
         type="button"
-        disabled={currentPage <= 1 || isLoading}
+        disabled={currentPage <= 1}
         aria-label="Load previous search results page"
         onClick={() => onPageChange(currentPage - 1)}
         className="focus-ring rounded-xl border border-border-subtle bg-surface-glass px-5 py-3 font-bold transition-colors hover:bg-primary/20 disabled:pointer-events-none disabled:opacity-50"
@@ -253,7 +211,7 @@ function SearchPagination({
       </span>
       <button
         type="button"
-        disabled={currentPage >= totalPages || isLoading}
+        disabled={currentPage >= totalPages}
         aria-label="Load next search results page"
         onClick={() => onPageChange(currentPage + 1)}
         className="focus-ring rounded-xl border border-border-subtle bg-surface-glass px-5 py-3 font-bold transition-colors hover:bg-primary/20 disabled:pointer-events-none disabled:opacity-50"

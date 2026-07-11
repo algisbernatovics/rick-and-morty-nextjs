@@ -58,7 +58,7 @@ function buildTitle(title: string) {
   return `${title} | ${SITE_NAME}`;
 }
 
-const DEFAULT_OG_IMAGE = "/icon.svg";
+const DEFAULT_OG_IMAGE = "/opengraph-image.png";
 
 export function createMetadata({
   title,

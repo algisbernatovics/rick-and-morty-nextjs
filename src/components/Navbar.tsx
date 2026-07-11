@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Menu, X, Users, Tv, MapPin, Info } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 const navItems = [
@@ -42,6 +42,19 @@ export function Navbar() {
             prefix !== "/" && pathname.startsWith(prefix)
         );
     };
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        function handleKeyDown(event: KeyboardEvent) {
+            if (event.key === "Escape") {
+                setIsOpen(false);
+            }
+        }
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [isOpen]);
 
     return (
         <nav className="sticky top-0 z-50 w-full border-b border-border-subtle bg-surface-glass/95 backdrop-blur-xl">

@@ -23,8 +23,7 @@ export async function generateMetadata({ params }: EpisodeIndexPageProps): Promi
 
   return createMetadata({
     title: `Rick and Morty Episode Guide - Page ${pageNumber}`,
-    description:
-      "Continue browsing the static Rick and Morty episode guide with episode codes, air dates, and linked cast pages.",
+    description: `Browse page ${pageNumber} of the Rick and Morty episode guide with season codes, air dates, and links to cast pages for every story.`,
     path: `/episodes/page/${pageNumber}`,
   });
 }
@@ -44,8 +43,11 @@ export default async function EpisodeIndexPage({ params }: EpisodeIndexPageProps
       <header className="mb-12">
         <div className="flex items-center gap-4 mb-6">
           <Tv className="text-primary shrink-0" size={56} strokeWidth={2.5} />
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-primary">
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-text-strong">
             RICK AND MORTY EPISODES
+            <span className="mt-3 block text-2xl md:text-3xl tracking-[0.2em] text-secondary">
+              Page {pageNumber}
+            </span>
           </h1>
         </div>
         <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
@@ -61,6 +63,7 @@ export default async function EpisodeIndexPage({ params }: EpisodeIndexPageProps
 
       <StaticEntityIndex
         entityType="episodes"
+        catalog={episodes}
         initialItems={paginatedEpisodes.items}
         currentPage={paginatedEpisodes.currentPage}
         totalPages={paginatedEpisodes.totalPages}

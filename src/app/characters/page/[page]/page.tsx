@@ -23,8 +23,7 @@ export async function generateMetadata({ params }: CharacterIndexPageProps): Pro
 
   return createMetadata({
     title: `Rick and Morty Characters Guide - Page ${pageNumber}`,
-    description:
-      "Continue browsing the static Rick and Morty character guide with crawlable pages for every character profile.",
+    description: `Browse page ${pageNumber} of the Rick and Morty character guide with searchable names, species, status, origin details, and links to every profile.`,
     path: `/characters/page/${pageNumber}`,
   });
 }
@@ -44,8 +43,11 @@ export default async function CharacterIndexPage({ params }: CharacterIndexPageP
       <header className="mb-12">
         <div className="flex items-center gap-4 mb-6">
           <Users className="text-primary shrink-0" size={56} strokeWidth={2.5} />
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-primary">
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-text-strong">
             RICK AND MORTY CHARACTERS
+            <span className="mt-3 block text-2xl md:text-3xl tracking-[0.2em] text-secondary">
+              Page {pageNumber}
+            </span>
           </h1>
         </div>
         <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
@@ -61,6 +63,7 @@ export default async function CharacterIndexPage({ params }: CharacterIndexPageP
 
       <StaticEntityIndex
         entityType="characters"
+        catalog={characters}
         initialItems={paginatedCharacters.items}
         currentPage={paginatedCharacters.currentPage}
         totalPages={paginatedCharacters.totalPages}

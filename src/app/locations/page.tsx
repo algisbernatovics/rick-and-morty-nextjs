@@ -23,9 +23,9 @@ export default function LocationsPage() {
             <header className="mb-12">
                 <div className="flex items-center gap-4 mb-6">
                     <MapPin className="text-secondary shrink-0" size={56} strokeWidth={2.5} />
-                    <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-secondary">
-                        RICK AND MORTY LOCATIONS
-                    </h1>
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-text-strong">
+            RICK AND MORTY LOCATIONS
+          </h1>
                 </div>
                 <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
                     Explore Rick and Morty locations across dimensions, location types, and resident lists with direct links to character pages throughout the universe.
@@ -40,6 +40,7 @@ export default function LocationsPage() {
 
             <StaticEntityIndex
                 entityType="locations"
+                catalog={locations}
                 initialItems={paginatedLocations.items}
                 currentPage={paginatedLocations.currentPage}
                 totalPages={paginatedLocations.totalPages}

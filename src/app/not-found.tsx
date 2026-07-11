@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Heart, Home, MapPin, SearchX, Tv, Users } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Page not found",
+  description: "The Rick and Morty page you requested does not exist in this static export.",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const recoveryLinks = [
   { href: "/", label: "Browse characters", icon: Users },

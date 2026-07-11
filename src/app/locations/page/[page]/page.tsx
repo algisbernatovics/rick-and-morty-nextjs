@@ -23,8 +23,7 @@ export async function generateMetadata({ params }: LocationIndexPageProps): Prom
 
   return createMetadata({
     title: `Rick and Morty Locations Guide - Page ${pageNumber}`,
-    description:
-      "Continue browsing the static Rick and Morty locations guide with dimensions, location types, and linked resident pages.",
+    description: `Browse page ${pageNumber} of the Rick and Morty locations guide with dimensions, location types, and linked resident pages.`,
     path: `/locations/page/${pageNumber}`,
   });
 }
@@ -44,8 +43,11 @@ export default async function LocationIndexPage({ params }: LocationIndexPagePro
       <header className="mb-12">
         <div className="flex items-center gap-4 mb-6">
           <MapPin className="text-secondary shrink-0" size={56} strokeWidth={2.5} />
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-secondary">
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-text-strong">
             RICK AND MORTY LOCATIONS
+            <span className="mt-3 block text-2xl md:text-3xl tracking-[0.2em] text-secondary">
+              Page {pageNumber}
+            </span>
           </h1>
         </div>
         <p className="max-w-3xl text-lg text-muted-foreground leading-relaxed mb-6">
@@ -61,6 +63,7 @@ export default async function LocationIndexPage({ params }: LocationIndexPagePro
 
       <StaticEntityIndex
         entityType="locations"
+        catalog={locations}
         initialItems={paginatedLocations.items}
         currentPage={paginatedLocations.currentPage}
         totalPages={paginatedLocations.totalPages}

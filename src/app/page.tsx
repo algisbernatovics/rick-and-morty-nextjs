@@ -8,7 +8,7 @@ import { ExploreLinks } from "@/components/ExploreLinks";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = createMetadata({
-  title: "Rick and Morty Characters Guide",
+  title: "Rick and Morty Explorer",
   description:
     "Browse a searchable Rick and Morty character guide with names, species, status, origin, and linked episode appearances.",
   path: "/",
@@ -23,7 +23,7 @@ export default function Home() {
       <header className="mb-12">
         <div className="flex items-center gap-4 mb-6">
           <Users className="text-primary shrink-0" size={56} strokeWidth={2.5} />
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-primary">
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-text-strong">
             RICK AND MORTY CHARACTERS
           </h1>
         </div>
@@ -40,6 +40,7 @@ export default function Home() {
 
       <StaticEntityIndex
         entityType="characters"
+        catalog={characters}
         initialItems={paginatedCharacters.items}
         currentPage={paginatedCharacters.currentPage}
         totalPages={paginatedCharacters.totalPages}
