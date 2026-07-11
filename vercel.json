@@ -1,4 +1,10 @@
 {
+  "rewrites": [
+    {
+      "source": "/googled7cb6c8b4b7e6ade.html",
+      "destination": "/googled7cb6c8b4b7e6ade"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

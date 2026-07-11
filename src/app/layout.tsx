@@ -40,9 +40,6 @@ export const metadata: Metadata = {
     description: getSiteDescription(),
     images: ["/icon.svg"],
   },
-  verification: {
-    google: "googled7cb6c8b4b7e6ade",
-  },
 };
 
 export default function RootLayout({

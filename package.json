@@ -9,6 +9,7 @@
     "generate:data": "node scripts/generate-rick-and-morty-data.mjs",
     "prebuild": "npm run generate:data",
     "build": "next build",
+    "postbuild": "node scripts/copy-google-verification.mjs",
     "start": "npx serve@latest out",
     "lint": "eslint"
   },
